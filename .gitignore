@@ -1,0 +1,26 @@
+# Environments
+env/
+venv/
+.env
+
+# Python/Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+db.sqlite3
+backend/media/
+backend/staticfiles/
+
+# Node/React (Frontend)
+node_modules/
+/frontend/node_modules/
+/frontend/build/
+/frontend/coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
