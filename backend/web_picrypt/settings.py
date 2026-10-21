@@ -65,8 +65,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-_frontend_urls_str = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
-CORS_ALLOWED_ORIGINS = [u.strip() for u in _frontend_urls_str.split(',') if u.strip()]
+# Commented by agent, reason: Enhance CORS origins to automatically strip trailing slashes and support Vercel deployment domains
+# _frontend_urls_str = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+# CORS_ALLOWED_ORIGINS = [u.strip() for u in _frontend_urls_str.split(',') if u.strip()]
+# End commented by agent
+_frontend_urls_str = os.environ.get('FRONTEND_URL', 'http://localhost:5173,https://picrypt-tau.vercel.app')
+CORS_ALLOWED_ORIGINS = [u.strip().rstrip('/') for u in _frontend_urls_str.split(',') if u.strip()]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+]
 CORS_ALLOW_CREDENTIALS = True
 
 _csrf_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', '')

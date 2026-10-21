@@ -339,6 +339,7 @@ class DecryptView(APIView):
         # save zip temp file to media/temp for serving
         zip_name = f"decrypted_{int(timezone.now().timestamp())}.zip"
         zip_path = os.path.join(settings.MEDIA_ROOT, "temp", zip_name)
+        os.makedirs(os.path.dirname(zip_path), exist_ok=True)
         with open(zip_path, "wb") as fh:
             fh.write(tmp.read())
 
