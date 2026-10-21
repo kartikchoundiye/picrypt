@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* silence nested warnings from Swiper */
-@import "swiper/swiper.css";
-@import "swiper/modules/pagination.css";

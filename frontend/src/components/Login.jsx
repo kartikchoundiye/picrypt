@@ -1,18 +1,12 @@
 // frontend/src/components/Login.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Navigate, Link } from "react-router-dom";
 import axios from "axios";
 
-// const API_BASE = "http://localhost:8000/api/auth";
+import { ENDPOINTS } from "../utils/api";
 
-const API_BASE = (() => {
-  if (window.location.hostname === "localhost") return "http://localhost:8000/api/auth";
-  // if (window.location.hostname.startsWith("192.168.")) return `http://${window.location.hostname}:8000/api/auth`;
-  if (window.location.hostname.startsWith("192.168.")) return `http://192.168.43.38:8000/api/auth`;
-  // TODO: replace with actual backend domain after deployment
-  return "https://your-production-backend.com/api/auth";
-})();
+const API_BASE = ENDPOINTS.AUTH;
 
 function parseJwt(token) {
   // Basic JWT payload parsing without external libs (no signature verify)
@@ -24,7 +18,7 @@ function parseJwt(token) {
         return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
       }).join("")
     ));
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }

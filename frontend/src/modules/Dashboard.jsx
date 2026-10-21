@@ -1,88 +1,9 @@
 // frontend/src/modules/Dashboard.jsx
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-
-// const Dashboard = () => {
-//   const [history, setHistory] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     // Fetch the user's history from backend API
-//     const fetchHistory = async () => {
-//       try {
-//         const response = await axios.get("/api/history/");
-//         setHistory(response.data); // Assume response is an array of history records
-//         setLoading(false);
-//       } catch (err) {
-//         setError("Failed to fetch history.");
-//         setLoading(false);
-//       }
-//     };
-//     fetchHistory();
-//   }, []);
-
-//   return (
-//     <div style={{ maxWidth: 700, margin: "0 auto", padding: 24 }}>
-//       <h2>User Encryption/Decryption History</h2>
-//       {loading && <div>Loading...</div>}
-//       {error && <div style={{ color: "red" }}>{error}</div>}
-//       {!loading && history.length > 0 && (
-//         <table border={1} cellPadding={8} style={{ width: "100%" }}>
-//           <thead>
-//             <tr>
-//               <th>Action</th>
-//               <th>File Name</th>
-//               <th>Date</th>
-//               <th>Time</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {history.map((item, idx) => (
-//               <tr key={idx}>
-//                 <td>{item.action}</td>
-//                 <td>{item.file_name}</td>
-//                 <td>{new Date(item.timestamp).toLocaleDateString()}</td>
-//                 <td>{new Date(item.timestamp).toLocaleTimeString()}</td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       )}
-//       {!loading && history.length === 0 && <div>No history available.</div>}
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// frontend/src/modules/Dashboard.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { ENDPOINTS } from "../utils/api";
 
-const API_BASE = (() => {
-  if (window.location.hostname === "localhost") return "http://localhost:8000/api/steghide";
-  if (window.location.hostname.startsWith("192.168.")) return `http://${window.location.hostname}:8000/api/steghide`;
-  // TODO: replace with actual backend domain after deployment
-  return "https://your-production-backend.com/api/steghide";
-})();
+const API_BASE = ENDPOINTS.STEGHIDE;
 
 export default function Dashboard() {
   const [history, setHistory] = useState([]);
@@ -91,11 +12,6 @@ export default function Dashboard() {
 
   // Get auth token from localStorage (adjust key to your implementation)
   const accessToken = localStorage.getItem("access_token") || localStorage.getItem("token");
-
-  useEffect(() => {
-    fetchHistory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   async function fetchHistory() {
     setLoading(true);
@@ -116,6 +32,13 @@ export default function Dashboard() {
       setLoading(false);
     }
   }
+
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    fetchHistory();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function renderFilesInfo(files_info) {
     if (!files_info || files_info.length === 0) return <em>No files recorded</em>;
@@ -156,7 +79,7 @@ export default function Dashboard() {
                 {row.stego_filename && (
                   <a
                     className="inline-block mt-2 px-3 py-1 bg-teal-600 text-white rounded text-sm"
-                    href={`${window.location.origin}${row.stego_filename.startsWith("/") ? "" : "/"}${row.stego_filename.startsWith("stego") ? process.env.REACT_APP_MEDIA_URL || "/media/" + row.stego_filename : "/media/" + row.stego_filename}`}
+                    href={`${window.location.origin}${row.stego_filename.startsWith("/") ? "" : "/"}${row.stego_filename.startsWith("stego") ? (import.meta.env.VITE_MEDIA_URL || "/media/") + row.stego_filename : "/media/" + row.stego_filename}`}
                     target="_blank"
                     rel="noreferrer"
                   >

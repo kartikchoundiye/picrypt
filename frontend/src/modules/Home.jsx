@@ -6,12 +6,16 @@ import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
-import Lottie from "lottie-react";
+import { useLottie } from "lottie-react";
 import gsap from "gsap";
 import picryptVideo from "../assets/PICRYPT.mp4";
 import encryptionAnimation from "../assets/encryption-animation.json";
 
-// import '../swiper-fix.css';
+// Wrapper component using useLottie hook — avoids CJS/ESM default-export interop issue
+function LottieView({ animationData, className }) {
+  const { View } = useLottie({ animationData, loop: true, autoplay: true });
+  return <div className={className}>{View}</div>;
+}
 
 const features = [
   { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "🔒" },
@@ -65,7 +69,7 @@ function TechCard({ icon, title, description }) {
   return (
     <motion.div
       onClick={() => setExpanded(!expanded)}
-      className="cursor-pointer bg-gradient-to-t from-blue-50 via-white to-blue-100 p-6 rounded-xl shadow-md max-w-xs mx-auto text-center select-none"
+      className="cursor-pointer bg-linear-to-t from-blue-50 via-white to-blue-100 p-6 rounded-xl shadow-md max-w-xs mx-auto text-center select-none"
       whileHover={{ y: -8, boxShadow: "0 8px 20px rgba(0,0,0,0.12)", scale: 1.04 }}
       layout
     >
@@ -93,10 +97,12 @@ export function Home() {
   const heroRef = useRef(null);
   const videoRef = useRef(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setVideoEnded(false);
     setReadyToPlay(false);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     if (videoEnded) controls.start("visible");
@@ -196,7 +202,7 @@ export function Home() {
             style={{ minHeight: "500px" }}
           >
             <div className="flex-1 flex justify-center md:justify-end items-center w-full order-1 md:order-2">
-              <Lottie animationData={encryptionAnimation} loop={true} className="w-full max-w-md h-auto" />
+              <LottieView animationData={encryptionAnimation} className="w-full max-w-md h-auto" />
             </div>
             <div className="flex-1 flex flex-col justify-center md:justify-start items-start text-left order-2 md:order-1">
               <h1 ref={heroRef} className="text-3xl md:text-5xl font-extrabold mb-6 text-gray-900 drop-shadow leading-[1.1]">
@@ -225,10 +231,10 @@ export function Home() {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "6rem", opacity: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
-            className="h-1 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400"
+            className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
           />
         </div>
-        
+
         <Swiper
           modules={[Autoplay, Pagination]}
           spaceBetween={24}
@@ -244,7 +250,7 @@ export function Home() {
         >
           {features.map((feature, idx) => (
             <SwiperSlide key={idx}>
-              <div className="flex flex-col items-center bg-gradient-to-t from-blue-50 via-white to-blue-100 p-8 rounded-xl shadow-md max-w-xs mx-auto text-center">
+              <div className="flex flex-col items-center bg-linear-to-t from-blue-50 via-white to-blue-100 p-8 rounded-xl shadow-md max-w-xs mx-auto text-center">
                 <div className="text-5xl mb-4">{feature.icon}</div>
                 <h3 className="font-semibold text-xl mb-2">{feature.title}</h3>
                 <p className="text-gray-700">{feature.description}</p>
@@ -266,10 +272,10 @@ export function Home() {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "6rem", opacity: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
-            className="h-1 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400"
+            className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
           />
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {encryptionTechCards.map((card, idx) => (
             <TechCard

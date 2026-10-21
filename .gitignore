@@ -2,6 +2,10 @@
 env/
 venv/
 .env
+*.env
+**/.env
+!**/.env.example
+!.env.example
 
 # Python/Django
 __pycache__/
@@ -16,7 +20,9 @@ backend/staticfiles/
 node_modules/
 /frontend/node_modules/
 /frontend/build/
+/frontend/dist/
 /frontend/coverage/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

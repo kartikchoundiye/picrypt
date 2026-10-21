@@ -1,6 +1,6 @@
 // frontend/src/modules/About.jsx
 
-import React from "react";
+// import React from "react";
 import { motion } from "framer-motion";
 import {
   FaFileImage,
@@ -54,14 +54,14 @@ const About = () => {
 
   return (
     // <div className="min-h-screen w-full mx-auto p-4 md:p-8 bg-gradient-to-r from-cyan-100 to-pink-100 space-y-10 pt-3 sm:pt-24">
-    <div className="min-h-screen w-full mx-auto p-4 md:p-8 bg-gradient-to-br from-slate-100 via-white to-slate-200 space-y-10 pt-3 sm:pt-24">
+    <div className="min-h-screen w-full mx-auto p-4 md:p-8 bg-linear-to-br from-slate-100 via-white to-slate-200 space-y-10 pt-3 sm:pt-24">
       <div className="max-w-7xl mx-auto text-center ">
         {/* MOBILE HEADING FIX */}
         <h1
-          className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm mb-4 flex justify-center gap-3"
+          className="text-3xl sm:text-5xl font-bold bg-linear-to-r from-cyan-500 via-blue-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm mb-4 flex justify-center gap-3"
           // className="text-3xl sm:text-5xl font-bold text-teal-700 mb-4 flex justify-center gap-3"
         >
-          <div className="sm:size-[42px] text-blue-500 from-cyan-500 via-blue-500 to-pink-500" />
+          <div className="sm:size-10.5 text-blue-500 from-cyan-500 via-blue-500 to-pink-500" />
           About Picrypt
         </h1>
 
@@ -77,7 +77,7 @@ const About = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "6rem", opacity: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
-            className="h-1 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400"
+            className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
           />
         </div>
 
@@ -90,7 +90,7 @@ const About = () => {
           {categories.map((item, idx) => (
             <div
               key={idx}
-              className={`p-5 sm:p-6 rounded-2xl shadow-md bg-gradient-to-br ${item.gradient}
+              className={`p-5 sm:p-6 rounded-2xl shadow-md bg-linear-to-br ${item.gradient}
                 transition transform hover:-translate-y-2 hover:shadow-2xl hover:scale-105 cursor-pointer`}
             >
               <div className="flex justify-center mb-2 sm:mb-3">{item.icon}</div>

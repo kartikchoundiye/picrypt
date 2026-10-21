@@ -7,7 +7,6 @@ import secrets
 from typing import List, Tuple, Optional
 
 from django.conf import settings
-from Crypto.Protocol.KDF import PBKDF2  # using PyCryptodome style if installed; otherwise use cryptography
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.hashes import SHA256
 from cryptography.hazmat.primitives import constant_time
@@ -15,22 +14,17 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 from PIL import Image
-import piexif
 import numpy as np
 import magic
 import zipfile
 
-# ---------------------------
-# low-level crypto helpers
-# ---------------------------
-def derive_key(passphrase: str, salt: bytes, iterations: int = None) -> bytes:
-    if iterations is None:
-        iterations = getattr(settings, "PBKDF2_ITERATIONS", 200000)
+def derive_key(passphrase: str, salt: bytes, iterations: Optional[int] = None) -> bytes:
+    iter_count: int = iterations if iterations is not None else int(getattr(settings, "PBKDF2_ITERATIONS", 200000))
     kdf = PBKDF2HMAC(
         algorithm=SHA256(),
         length=32,
         salt=salt,
-        iterations=iterations,
+        iterations=iter_count,
         backend=default_backend(),
     )
     return kdf.derive(passphrase.encode("utf-8"))
@@ -156,8 +150,6 @@ def detect_mime(file_bytes: bytes) -> str:
 # LSB embedding for PNG/BMP/TIFF/TIF (lossless)
 # ---------------------------
 
-
-
 def estimate_lsb_capacity(image: Image.Image, bits_per_channel: int = 1) -> int:
     w, h = image.size
     # mode = image.mode  # e.g., "RGB", "RGBA"
@@ -204,13 +196,6 @@ def embed_payload_in_png_lsb(image_bytes: bytes, payload: bytes, bits_per_channe
         raise ValueError(
             "Payload too large for LSB embedding."
         )
-    
-    
-    # if len(full_data) > capacity_bytes:
-    #     raise ValueError(
-    #         f"Payload too large for LSB embedding. "
-    #         # f"Need {len(full_data)} bytes, capacity {capacity_bytes} bytes."
-    #     )
 
     # 6️⃣ Convert image to uint8 array
     arr = np.array(img, dtype=np.uint8)

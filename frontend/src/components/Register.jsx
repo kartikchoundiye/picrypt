@@ -1,19 +1,13 @@
 // frontend/src/components/Register.jsx
 
-import React , { useState , useEffect , useRef  } from "react";
+import { useState , useEffect , useRef  } from "react";
 import { Link , useNavigate} from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
 
-// const API_BASE = "http://localhost:8000/api/auth";
+import { ENDPOINTS } from "../utils/api";
 
-const API_BASE = (() => {
-  if (window.location.hostname === "localhost") return "http://localhost:8000/api/auth";
-  // if (window.location.hostname.startsWith("192.168.")) return `http://${window.location.hostname}:8000/api/auth`;
-  if (window.location.hostname.startsWith("192.168.")) return `http://192.168.43.38:8000/api/auth`;
-  // TODO: replace with actual backend domain after deployment
-  return "https://your-production-backend.com/api/auth";
-})();
+const API_BASE = ENDPOINTS.AUTH;
 
 export default function Register() {
   const [step, setStep] = useState(1);

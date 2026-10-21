@@ -1,6 +1,6 @@
 // frontend/src/components/Footer.js
 
-import React from "react";
+// import React from "react";
 import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import "./Footer.css";
 import logo from "./logo.png"; // ✅ since logo.png is directly in src/

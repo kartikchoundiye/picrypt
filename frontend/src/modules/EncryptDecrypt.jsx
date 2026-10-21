@@ -1,5 +1,5 @@
 // frontend/src/modules/EncryptDecrypt.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import EncryptForm from "../components/EncryptForm";
 import DecryptForm from "../components/DecryptForm";
@@ -8,7 +8,7 @@ export default function EncryptDecrypt() {
   const [mobileTab, setMobileTab] = useState("encrypt");
 
   return (
-    <div className="min-h-screen w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 bg-gradient-to-br from-slate-100 via-white to-slate-200 space-y-7">
+    <div className="min-h-screen w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 bg-linear-to-br from-slate-100 via-white to-slate-200 space-y-7">
 
       {/* ===== HEADER ===== */}
       <div className="text-center space-y-2">
@@ -19,7 +19,7 @@ export default function EncryptDecrypt() {
           className="text-4xl sm:text-5xl font-extrabold tracking-tight"
         >
           <span
-            className="bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm"
+            className="bg-linear-to-r from-cyan-500 via-blue-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm"
           >
             PICRYPT
           </span>
@@ -50,7 +50,7 @@ export default function EncryptDecrypt() {
           initial={{ width: 0, opacity: 0 }}
           animate={{ width: "6rem", opacity: 1 }}
           transition={{ delay: 1, duration: 0.6 }}
-          className="h-1 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400"
+          className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
         />
       </div>
 
@@ -70,7 +70,7 @@ export default function EncryptDecrypt() {
               onClick={() => setMobileTab("encrypt")}
               className={`px-6 py-2 text-sm font-semibold transition-all duration-200 
                 ${mobileTab === "encrypt"
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-inner scale-105"
+                  ? "bg-linear-to-r from-cyan-500 to-blue-500 text-white shadow-inner scale-105"
                   : "text-gray-600 hover:bg-gray-100"
                 }`
               }
@@ -82,7 +82,7 @@ export default function EncryptDecrypt() {
               onClick={() => setMobileTab("decrypt")}
               className={`px-6 py-2 text-sm font-semibold transition-all duration-200 
                 ${mobileTab === "decrypt"
-                  ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-inner scale-105"
+                  ? "bg-linear-to-r from-emerald-500 to-teal-500 text-white shadow-inner scale-105"
                   : "text-gray-600 hover:bg-gray-100"
                 }`
               }

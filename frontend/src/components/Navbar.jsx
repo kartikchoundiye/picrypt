@@ -1,6 +1,6 @@
 // frontend/src/components/Navbar.jsx
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/picrypt_logo.png';
 
@@ -18,6 +18,7 @@ const Navbar = () => {
     { name: 'Contact', path: '/contact' },
   ];
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     const u = localStorage.getItem('user');
@@ -29,6 +30,7 @@ const Navbar = () => {
       setUser(null);
     }
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const logout = () => {
     localStorage.removeItem('access_token');
@@ -53,7 +55,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <div className="flex items-center flex-shrink-0">
+          <div className="flex items-center shrink-0">
             <Link to="/" className="flex items-center">
               <img className="h-14 w-auto object-contain" src={logo} alt="PICRYPT Logo" />
               <span className="ml-2 text-xl font-bold text-white tracking-wider">PICRYPT</span>
@@ -61,7 +63,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex flex-grow justify-center">
+          <div className="hidden md:flex grow justify-center">
             <div className="flex items-baseline space-x-6">
               {navLinks.map((link) => (
                 <NavLink key={link.name} to={link.path} className={getLinkClasses}>

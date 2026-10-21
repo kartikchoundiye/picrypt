@@ -7,7 +7,7 @@
 // • Encryption API call + secure download
 // • Fully responsive + mobile friendly
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 /* =========================== Utils & Assets =========================== */
@@ -22,15 +22,9 @@ import picryptLogo from "../assets/picrypt_logo.png";
 import ConfirmModal from "./ConfirmModal";
 
 
-/* =========================== Backend API base (supports localhost, LAN & prod) ==================== */
+import { ENDPOINTS } from "../utils/api";
 
-const API_BASE = (() => {
-    if (window.location.hostname === "localhost") return "http://localhost:8000/api/steghide";
-    if (window.location.hostname.startsWith("192.168.")) return `http://${window.location.hostname}:8000/api/steghide`;
-    // TODO: replace with actual backend domain after deployment
-    return "https://your-production-backend.com/api/steghide";
-})();
-
+const API_BASE = ENDPOINTS.STEGHIDE;
 
 /* ======================== CONSTANTS: Allowed extensions ====================== */
 
@@ -369,7 +363,7 @@ export default function EncryptForm({ isMobileActive }) {
             if (cd) {
                 const match = cd.match(/filename\*?=(?:UTF-8'')?["']?([^;"']+)["']?/i);
                 if (match && match[1]) {
-                    try { filename = decodeURIComponent(match[1]); } catch (e) { filename = match[1]; }
+                    try { filename = decodeURIComponent(match[1]); } catch (_e) { filename = match[1]; }
                 }
             } else {
                 // fallback: extract last path segment from URL
@@ -378,7 +372,7 @@ export default function EncryptForm({ isMobileActive }) {
                     const parts = u.pathname.split("/");
                     const last = parts[parts.length - 1];
                     if (last) filename = decodeURIComponent(last);
-                } catch (e) {
+                } catch (_e) {
                     // ignore
                 }
             }
@@ -432,7 +426,6 @@ export default function EncryptForm({ isMobileActive }) {
         setShowEncClearConfirm(false);
     }
 
-
     return (
         /* ======================================================
         MOBILE / DESKTOP VISIBILITY WRAPPER
@@ -443,13 +436,13 @@ export default function EncryptForm({ isMobileActive }) {
             <div className="relative">
 
                 {/* =================== LEFT GRADIENT ACCENT BAR (Visual identity)================= */}
-                <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-gradient-to-b from-cyan-400 to-blue-400" />
+                <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-linear-to-b from-cyan-400 to-blue-400" />
                 <div className="pl-4">
 
                     {/* ==================== ENCRYPTION FORM CONTAINER ======================= */}
                     <form
                         onSubmit={handleEncrypt}
-                        className="rounded-2xl bg-gradient-to-b from-white to-cyan-50/60 backdrop-blur border border-cyan-200 shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6 space-y-4"
+                        className="rounded-2xl bg-linear-to-b from-white to-cyan-50/60 backdrop-blur border border-cyan-200 shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6 space-y-4"
                     >
                         {/* ======================================================
                             FORM HEADER
@@ -573,7 +566,7 @@ export default function EncryptForm({ isMobileActive }) {
                         {/* =========== CARRIER METADATA DISPLAY ============ */}
 
                         {carrierInfo && (
-                            <div className="text-sm bg-gradient-to-r from-cyan-50 to-white p-3 border border-cyan-200 rounded-md grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
+                            <div className="text-sm bg-linear-to-r from-cyan-50 to-white p-3 border border-cyan-200 rounded-md grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
 
                                 {/* Carrier info */}
                                 <p className="order-1 md:order-1">
@@ -686,7 +679,7 @@ export default function EncryptForm({ isMobileActive }) {
                         {/* Payload files List */}
 
                         {encFiles.length > 0 && (
-                            <div className="text-sm bg-gradient-to-b from-white to-slate-50 border border-slate-200 p-3 rounded-md space-y-2">
+                            <div className="text-sm bg-linear-to-b from-white to-slate-50 border border-slate-200 p-3 rounded-md space-y-2">
                                 <b>Payload Files : </b>
                                 <div className="mt-3 rounded-md p-2 bg-white">
                                     <ul className="mt-3 space-y-2 max-h-60 overflow-y-auto">
@@ -799,7 +792,7 @@ export default function EncryptForm({ isMobileActive }) {
                         <button
                             type="submit"
                             disabled={encLoading}
-                            className={`mt-3 px-4 py-2.5 w-full rounded-md text-sm text-white ${encLoading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 "}`}
+                            className={`mt-3 px-4 py-2.5 w-full rounded-md text-sm text-white ${encLoading ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 "}`}
                         >
                             {encLoading ? "Encrypting…" : "Encrypt"}
                         </button>

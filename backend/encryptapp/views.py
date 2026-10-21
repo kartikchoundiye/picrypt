@@ -231,6 +231,7 @@ class EncryptView(APIView):
         filename = f"stego_{int(timezone.now().timestamp())}_{carrier.name}"
         path = os.path.join("stego", filename)
         full_path = os.path.join(settings.MEDIA_ROOT, path)
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
         with open(full_path, "wb") as out:
             out.write(stego_bytes)
 

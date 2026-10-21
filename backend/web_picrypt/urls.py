@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import path,include
 from django.views.generic.base import RedirectView
 # from encryptapp.views import EncryptAPIView, DecryptAPIView, DownloadFileAPIView 
-from django.urls import path
+from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 
 urlpatterns = [
@@ -35,4 +36,11 @@ urlpatterns = [
     # path('api/decrypt/', DecryptAPIView.as_view(), name='decrypt'),
     # path('api/download/', DownloadFileAPIView.as_view(), name='download_file'),
     path("api/steghide/", include("encryptapp.urls")),
+# Commented by agent, reason: Ensure media files (stego images and decrypted downloads) are accessible even in production when DEBUG=False
+# ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# End commented by agent
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]

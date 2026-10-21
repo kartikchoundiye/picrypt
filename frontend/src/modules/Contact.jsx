@@ -1,6 +1,6 @@
 // frontend/src/modules/Contact.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 const Contact = () => {
@@ -18,9 +18,9 @@ const Contact = () => {
 
   return (
     // <div className="min-h-screen w-full mx-auto p-4 md:p-8 bg-gradient-to-r from-cyan-100 to-pink-100 space-y-10 pt-3 sm:pt-24">
-    <div className="min-h-screen w-full mx-auto p-4 md:p-8 bg-gradient-to-br from-slate-100 via-white to-slate-200 space-y-10 pt-3 sm:pt-24">
+    <div className="min-h-screen w-full mx-auto p-4 md:p-8 bg-linear-to-br from-slate-100 via-white to-slate-200 space-y-10 pt-3 sm:pt-24">
       <div className="max-w-7xl mx-auto w-full">
-        <h1 className="text-center text-3xl md:text-4xl font-bold mb-10  bg-gradient-to-r from-cyan-500 via-blue-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
+        <h1 className="text-center text-3xl md:text-4xl font-bold mb-10  bg-linear-to-r from-cyan-500 via-blue-500 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
           Contact Us
         </h1>
 
@@ -30,7 +30,7 @@ const Contact = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "6rem", opacity: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
-            className="h-1 rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400"
+            className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
           />
         </div>
 
@@ -67,7 +67,7 @@ const Contact = () => {
                 placeholder="Your Message"
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg min-h-[130px] focus:ring-2 focus:ring-indigo-500 outline-none transition"
+                className="w-full p-3 border rounded-lg min-h-32.5 focus:ring-2 focus:ring-indigo-500 outline-none transition"
                 required
               />
 
@@ -88,7 +88,7 @@ const Contact = () => {
                 🧠 Vision & Mission
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                Picrypt was founded by <strong>Gitesh Jare , Jayesh Dabhade , Kartik Choundiye</strong> to empower users with secure image encryption tools that are simple, private, and delightful to use.
+                Picrypt was founded to empower users with secure image encryption tools that are simple, private, and delightful to use.
               </p>
             </div>
 
