@@ -259,8 +259,8 @@ PBKDF2_ITERATIONS = 200000
 AES_GCM_IV_LENGTH = 12
 DEFAULT_MAX_PAYLOAD_BYTES = 1_000_000  # 1 MB default
 
-# Production Security & SSL Settings (Automatically applied when DEBUG=False in production)
-if not DEBUG:
+# Production Security & SSL Settings (Automatically applied when running in cloud production e.g. Render)
+if not DEBUG and os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
     # Tell Django behind Render's reverse-proxy that requests are HTTPS
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True').lower() in ('true', '1')
@@ -269,4 +269,13 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+elif not DEBUG:
+    # Non-cloud production or local production testing
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1')
+    SESSION_COOKIE_SECURE = SECURE_SSL_REDIRECT
+    CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT
+    if SECURE_SSL_REDIRECT:
+        SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))
+        SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+        SECURE_HSTS_PRELOAD = True
 

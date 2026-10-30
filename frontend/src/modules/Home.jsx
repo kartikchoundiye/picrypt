@@ -1,15 +1,18 @@
 // frontend/src/modules/Home.jsx
 
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useLottie } from "lottie-react";
 import gsap from "gsap";
-import picryptVideo from "../assets/PICRYPT.mp4";
 import encryptionAnimation from "../assets/encryption-animation.json";
+import CyberLockIllustration from "../components/CyberLockIllustration";
+import CyberTrustCarousel from "../components/CyberTrustCarousel";
+import CyberTechCard from "../components/CyberTechCard";
 
 // Wrapper component using useLottie hook — avoids CJS/ESM default-export interop issue
 function LottieView({ animationData, className }) {
@@ -62,51 +65,9 @@ const encryptionTechCards = [
   },
 ];
 
-// TechCard component for encryption tech section
-function TechCard({ icon, title, description }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <motion.div
-      onClick={() => setExpanded(!expanded)}
-      className="cursor-pointer bg-linear-to-t from-blue-50 via-white to-blue-100 p-6 rounded-xl shadow-md max-w-xs mx-auto text-center select-none"
-      whileHover={{ y: -8, boxShadow: "0 8px 20px rgba(0,0,0,0.12)", scale: 1.04 }}
-      layout
-    >
-      <div className="text-5xl mb-3">{icon}</div>
-      <h3 className="font-semibold text-xl mb-2">{title}</h3>
-      <motion.p
-        initial={false}
-        animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        className="overflow-hidden text-gray-700"
-      >
-        {description}
-      </motion.p>
-      {!expanded && (
-        <p className="text-blue-600 mt-2 font-semibold">Tap to read more</p>
-      )}
-    </motion.div>
-  );
-}
-
 export function Home() {
-  const [videoEnded, setVideoEnded] = useState(false);
-  const [readyToPlay, setReadyToPlay] = useState(false);
-  const controls = useAnimation();
+  const navigate = useNavigate();
   const heroRef = useRef(null);
-  const videoRef = useRef(null);
-
-  /* eslint-disable react-hooks/set-state-in-effect */
-  useEffect(() => {
-    setVideoEnded(false);
-    setReadyToPlay(false);
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
-
-  useEffect(() => {
-    if (videoEnded) controls.start("visible");
-  }, [videoEnded, controls]);
 
   useEffect(() => {
     if (heroRef.current) {
@@ -125,161 +86,134 @@ export function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    if (readyToPlay && videoRef.current) videoRef.current.play();
-  }, [readyToPlay]);
-
   return (
     <div className="w-full bg-gray-100">
-      {/* VIDEO SECTION */}
-      <AnimatePresence>
-        {!videoEnded && (
-          <motion.div
-            key="intro-video"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="flex justify-center items-start z-10"
-            style={{
-              width: "100vw",
-              background: "#000",
-              overflow: "hidden",
-              position: "relative",
-              height: "auto",
-            }}
-          >
-            {!readyToPlay ? (
-              <>
-                <video
-                  src={picryptVideo}
-                  autoPlay
-                  controls={false}
-                  muted
-                  playsInline
-                  onEnded={() => setVideoEnded(true)}
-                  className="block w-full h-[calc(100vh-80px)] object-cover md:h-[calc(100vh-80px)] md:w-full mobile-video"
-                  style={{ maxHeight: "700px", minHeight: "260px", minWidth: "100vw" }}
-                />
-                <style>{`
-                  @media (max-width: 768px) {
-                    .mobile-video {
-                      width: 90vw !important;
-                      height: auto !important;
-                      margin: 12px auto !important;
-                      border-radius: 12px;
-                      object-fit: contain !important;
-                    }
-                  }
-                `}</style>
-              </>
-            ) : (
-              <video
-                ref={videoRef}
-                src={picryptVideo}
-                controls={false}
-                autoPlay
-                muted={false}
-                playsInline
-                onEnded={() => setVideoEnded(true)}
-                className="block w-full h-[calc(100vh-80px)] object-cover md:h-[calc(100vh-80px)] md:w-full mobile-video"
-                style={{ maxHeight: "700px", minHeight: "260px", minWidth: "100vw" }}
-              />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* HERO & LOTTIE (after video) */}
-      <AnimatePresence>
-        {videoEnded && (
-          <motion.section
+      {/* HERO & LOTTIE */}
+      <motion.section
             key="hero-lottie-content"
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
+            exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.8 }}
-            className="w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-12 pt-16 px-6 md:px-16"
-            style={{ minHeight: "500px" }}
+            className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 pt-12 md:pt-20 pb-10 px-6 md:px-12"
+            style={{ minHeight: "540px" }}
           >
-            <div className="flex-1 flex justify-center md:justify-end items-center w-full order-1 md:order-2">
-              <LottieView animationData={encryptionAnimation} className="w-full max-w-md h-auto" />
+            <div className="flex-1 flex justify-center md:justify-end items-center w-full order-1 md:order-2 md:pl-6 lg:pl-10">
+              <CyberLockIllustration animationData={encryptionAnimation} />
             </div>
-            <div className="flex-1 flex flex-col justify-center md:justify-start items-start text-left order-2 md:order-1">
-              <h1 ref={heroRef} className="text-3xl md:text-5xl font-extrabold mb-6 text-gray-900 drop-shadow leading-[1.1]">
-                Safeguard Your Memories, Secure Your Communication
+            <div className="flex-1 flex flex-col justify-center items-start text-left order-2 md:order-1 pt-2 md:pt-6">
+              {/* Security Pill Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs sm:text-sm font-medium mb-5 shadow-[0_0_14px_rgba(6,182,212,0.25)]">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                Next-Gen Image Steganography & AES-256 Vault
+              </div>
+
+              {/* Main Headline */}
+              <h1 ref={heroRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 text-white drop-shadow-sm leading-[1.15] tracking-tight">
+                Hide Your Message.{" "}
+                <span className="bg-linear-to-r from-cyan-400 via-teal-300 to-blue-400 bg-clip-text text-transparent">
+                  Encrypt Your Image.
+                </span>{" "}
+                Own Your Privacy.
               </h1>
-              <p className="text-gray-700 mb-8 leading-relaxed text-lg max-w-xl">
-                Take control of your digital privacy with PICRYPT — the effortless image encryption tool designed to protect what matters most.
+
+              {/* Supporting Subtext */}
+              <p className="text-slate-300 mb-8 leading-relaxed text-base sm:text-lg max-w-xl font-normal">
+                Go beyond ordinary image security with PICRYPT. Encrypt images and conceal secret messages inside them to help keep your private information protected.
               </p>
-              <button className="bg-teal-600 text-white px-6 py-3 rounded-lg shadow-lg font-semibold hover:bg-teal-700 transition-all">
-                Encrypt Your First Image
-              </button>
+
+              {/* Action Button */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
+                <button
+                  onClick={() => navigate("/crypt")}
+                  className="group inline-flex items-center gap-2.5 bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-bold px-8 py-3.5 rounded-xl shadow-[0_0_20px_rgba(20,184,166,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.55)] transition-all transform hover:-translate-y-0.5 cursor-pointer text-base"
+                >
+                  <span>Protect Your Image</span>
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Trust & Connectivity Highlights */}
+              <div className="mt-8 pt-6 border-t border-cyan-500/15 w-full flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm text-slate-300 font-medium">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-cyan-400 font-bold">✓</span> Zero-Knowledge
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-teal-400 font-bold">✓</span> Client-Side Privacy
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-cyan-400 font-bold">✓</span> Lossless Stego Recovery
+                </div>
+              </div>
             </div>
           </motion.section>
-        )}
-      </AnimatePresence>
 
       {/* WHY TRUST ON PICRYPT - Swiper Multiple Blocks */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
-        <h2 className="text-center text-3xl md:text-4xl font-bold mb-8 text-gray-900">
-          Why Trust on PICRYPT
-        </h2>
-
-        {/* ===== DIVIDER ===== */}
-        <div className="flex justify-center space-y-2 mb-8">
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: "6rem", opacity: 1 }}
-            transition={{ delay: 1, duration: 0.6 }}
-            className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
-          />
-        </div>
-
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          spaceBetween={24}
-          slidesPerView={1}
-          breakpoints={{
-            640: { slidesPerView: 3 },
-            1024: { slidesPerView: 5 }
-          }}
-          pagination={{ clickable: true }}
-          loop={true}
-          autoplay={{ delay: 2000, disableOnInteraction: false }}
-          style={{ paddingBottom: 40 }}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="text-center mb-8"
         >
-          {features.map((feature, idx) => (
-            <SwiperSlide key={idx}>
-              <div className="flex flex-col items-center bg-linear-to-t from-blue-50 via-white to-blue-100 p-8 rounded-xl shadow-md max-w-xs mx-auto text-center">
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="font-semibold text-xl mb-2">{feature.title}</h3>
-                <p className="text-gray-700">{feature.description}</p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+          <div className="ctc-heading-wrapper">
+            <h2 className="ctc-neon-heading text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight">
+              Why Trust on PICRYPT
+            </h2>
+            <div className="ctc-heading-beam" aria-hidden="true" />
+          </div>
+
+          {/* ===== ANIMATED NEON UNDERLINE ===== */}
+          <div className="flex justify-center mt-3">
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="ctc-neon-underline"
+            />
+          </div>
+        </motion.div>
+
+        <CyberTrustCarousel />
       </section>
 
       {/* ENCRYPTION TECHNOLOGY BEHIND PICRYPT */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
-        <h2 className="text-center text-3xl md:text-4xl font-bold mb-12 text-gray-900">
-          Encryption Technology Behind PICRYPT
-        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="text-center mb-10"
+        >
+          <div className="ctc-heading-wrapper">
+            <h2 className="ctc-neon-heading text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight">
+              Encryption Technology Behind PICRYPT
+            </h2>
+            <div className="ctc-heading-beam" aria-hidden="true" />
+          </div>
 
-        {/* ===== DIVIDER ===== */}
-        <div className="flex justify-center space-y-2 mb-8">
-          <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: "6rem", opacity: 1 }}
-            transition={{ delay: 1, duration: 0.6 }}
-            className="h-1 rounded-full bg-linear-to-r from-cyan-400 via-blue-400 to-pink-400"
-          />
-        </div>
+          {/* ===== ANIMATED NEON UNDERLINE ===== */}
+          <div className="flex justify-center mt-3">
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="ctc-neon-underline"
+            />
+          </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 max-w-6xl mx-auto w-full items-stretch">
           {encryptionTechCards.map((card, idx) => (
-            <TechCard
+            <CyberTechCard
               key={idx}
+              idx={idx}
               icon={card.icon}
               title={card.title}
               description={card.description}
@@ -289,12 +223,12 @@ export function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="text-center w-full">
+      <section className="text-center w-full py-12">
         <motion.button
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 0.93 }}
-          onClick={() => { }}
-          className=" bottom-10  mx-auto bg-teal-600 text-white px-8 py-4 rounded-lg font-bold text-lg shadow hover:bg-teal-700 transition-all"
+          onClick={() => navigate("/crypt")}
+          className="mx-auto bg-teal-600 text-white px-8 py-4 rounded-lg font-bold text-lg shadow hover:bg-teal-700 transition-all cursor-pointer"
         >
           Get Started Now
         </motion.button>
