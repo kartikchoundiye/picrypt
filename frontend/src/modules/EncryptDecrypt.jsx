@@ -1,6 +1,5 @@
 // frontend/src/modules/EncryptDecrypt.jsx
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import EncryptForm from "../components/EncryptForm";
 import DecryptForm from "../components/DecryptForm";
 
@@ -14,10 +13,8 @@ const PARTICLES = [
 ];
 
 export default function EncryptDecrypt() {
-  const [mobileTab, setMobileTab] = useState("encrypt");
-
   return (
-    <div className="edp-page-root min-h-screen w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 relative overflow-hidden">
+    <div className="edp-page-root w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 relative overflow-hidden">
 
       {/* ===== BACKGROUND DIGITAL PARTICLES LAYER ===== */}
       <div className="edp-particles-layer" aria-hidden="true">
@@ -104,67 +101,126 @@ export default function EncryptDecrypt() {
         </span>
       </div>
 
-      {/* ===== DESKTOP & TABLET TWO-COLUMN LAYOUT ===== */}
-      <div className="hidden md:grid grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto relative z-10 items-stretch">
+      {/* ===== ENCRYPT & DECRYPT WORKING CONTAINERS (Vertically Stacked on Mobile/Tablet, Two Columns on Desktop) ===== */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-6xl mx-auto relative z-10 items-stretch">
         <EncryptForm />
         <DecryptForm />
       </div>
 
-      {/* ===== MOBILE VIEW (With Cyber Tab Switcher) ===== */}
-      <div className="md:hidden space-y-6 relative z-10">
-        {/* MOBILE TOGGLE SWITCHER */}
-        <div className="flex justify-center">
-          <div className="inline-flex rounded-xl border border-cyan-500/25 bg-[#0a1324]/90 backdrop-blur-md shadow-inner p-1">
-            <button
-              onClick={() => setMobileTab("encrypt")}
-              className={`px-5 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer ${
-                mobileTab === "encrypt"
-                  ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(0,217,245,0.4)] scale-102"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              🔒 Encryption
-            </button>
+      {/* ===== STEGANOGRAPHIC SECURITY PIPELINE (Fills empty gaps & explains the technology) ===== */}
+      <section className="mt-10 sm:mt-14 pt-8 border-t border-cyan-500/20 max-w-6xl mx-auto relative z-10">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0a1324] border border-cyan-500/30 text-cyan-400 text-xs font-mono uppercase tracking-widest shadow-[0_0_12px_rgba(0,217,245,0.2)] mb-3">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            Security Pipeline // 3-Phase Steganography
+          </div>
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            How PICRYPT Conceals & Protects Your Data
+          </h3>
+          <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto mt-2 leading-relaxed">
+            Combining military-grade AES-256 encryption with imperceptible Least Significant Bit (LSB) pixel encoding.
+          </p>
+        </div>
 
-            <button
-              onClick={() => setMobileTab("decrypt")}
-              className={`px-5 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer ${
-                mobileTab === "decrypt"
-                  ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-[0_0_15px_rgba(0,214,160,0.4)] scale-102"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              🔑 Decryption
-            </button>
+        {/* 3 Responsive Process Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          {/* Card 1: Carrier Ingestion */}
+          <div className="relative rounded-2xl p-6 bg-[#0c1629]/80 border border-cyan-500/30 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.4)] flex flex-col justify-between group hover:border-cyan-400 transition-all duration-300">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-2xl p-2.5 rounded-xl bg-cyan-950/70 border border-cyan-500/40 text-cyan-300 shadow-[0_0_12px_rgba(0,217,245,0.25)]">
+                  🖼️
+                </span>
+                <span className="text-[11px] font-mono tracking-widest uppercase text-cyan-400 bg-cyan-950/50 px-2.5 py-1 rounded-full border border-cyan-500/20">
+                  Phase 01 // Ingestion
+                </span>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">
+                Carrier Image Analysis
+              </h4>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Upload any standard PNG, JPG, or BMP image. PICRYPT instantly analyzes the pixel grid matrix and calculates the exact embedding capacity with zero visual degradation.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-cyan-500/15 flex items-center gap-2 text-xs font-mono text-cyan-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              Lossless Format Preservation
+            </div>
+          </div>
+
+          {/* Card 2: AES-256 Encryption */}
+          <div className="relative rounded-2xl p-6 bg-[#0c1629]/80 border border-purple-500/30 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.4)] flex flex-col justify-between group hover:border-purple-400 transition-all duration-300">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-2xl p-2.5 rounded-xl bg-purple-950/70 border border-purple-500/40 text-purple-300 shadow-[0_0_12px_rgba(144,101,245,0.25)]">
+                  🔐
+                </span>
+                <span className="text-[11px] font-mono tracking-widest uppercase text-purple-400 bg-purple-950/50 px-2.5 py-1 rounded-full border border-purple-500/20">
+                  Phase 02 // Cipher
+                </span>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                Zero-Knowledge Encryption
+              </h4>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Before injection, your secret payload is encrypted using AES-256 bit keys. Your passphrase stays private in your browser and is never stored or logged on any server.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-purple-500/15 flex items-center gap-2 text-xs font-mono text-purple-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+              AES-256 Bit Cryptographic Core
+            </div>
+          </div>
+
+          {/* Card 3: Steganographic Recovery */}
+          <div className="relative rounded-2xl p-6 bg-[#0c1629]/80 border border-emerald-500/30 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.4)] flex flex-col justify-between group hover:border-emerald-400 transition-all duration-300">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-2xl p-2.5 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 shadow-[0_0_12px_rgba(0,214,160,0.25)]">
+                  ⚡
+                </span>
+                <span className="text-[11px] font-mono tracking-widest uppercase text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                  Phase 03 // Extraction
+                </span>
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+                Lossless Stego Extraction
+              </h4>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Download your stego-carrier and share it via any channel. The intended recipient enters the matching decryption key to restore the exact original payload with 100% integrity.
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-emerald-500/15 flex items-center gap-2 text-xs font-mono text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              Bit-for-Bit Hash Verification
+            </div>
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          {mobileTab === "encrypt" && (
-            <motion.div
-              key="encrypt"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3 }}
-            >
-              <EncryptForm isMobileActive={mobileTab === "encrypt"} />
-            </motion.div>
-          )}
-
-          {mobileTab === "decrypt" && (
-            <motion.div
-              key="decrypt"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3 }}
-            >
-              <DecryptForm isMobileActive={mobileTab === "decrypt"} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        {/* Telemetry and Specs Strip */}
+        <div className="mt-8 p-4 sm:p-5 rounded-2xl bg-[#091120]/90 border border-cyan-500/20 backdrop-blur-md flex flex-wrap items-center justify-around gap-4 text-xs sm:text-sm font-mono text-slate-300">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00D9F5]" />
+            <span className="text-slate-400">CIPHER:</span>
+            <span className="text-cyan-300 font-semibold">AES-256-CBC</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse shadow-[0_0_8px_#9065F5]" />
+            <span className="text-slate-400">METHOD:</span>
+            <span className="text-purple-300 font-semibold">LSB Steganography</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#00D6A0]" />
+            <span className="text-slate-400">PRIVACY:</span>
+            <span className="text-emerald-300 font-semibold">100% Zero-Knowledge</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse shadow-[0_0_8px_#14B8A6]" />
+            <span className="text-slate-400">STORAGE:</span>
+            <span className="text-teal-300 font-semibold">Zero Server Retention</span>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

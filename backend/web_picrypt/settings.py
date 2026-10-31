@@ -29,10 +29,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 # Commented by agent, reason: Automatically support Render hostnames alongside user configured ALLOWED_HOSTS
-# _allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+# _allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,picrypt.onrender.com,.onrender.com')
 # ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_str.split(',') if h.strip()]
 # End commented by agent
-_allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+_allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,picrypt.onrender.com,.onrender.com')
 ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_str.split(',') if h.strip()]
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
@@ -76,7 +76,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-_csrf_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+_csrf_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://picrypt.onrender.com')
 CSRF_TRUSTED_ORIGINS = [u.strip() for u in _csrf_origins_str.split(',') if u.strip()]
 for origin in CORS_ALLOWED_ORIGINS:
     if (origin.startswith('http://') or origin.startswith('https://')) and origin not in CSRF_TRUSTED_ORIGINS:

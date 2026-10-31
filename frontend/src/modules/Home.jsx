@@ -1,4 +1,4 @@
-// frontend/src/modules/Home.jsx
+﻿// frontend/src/modules/Home.jsx
 
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,21 +14,21 @@ import CyberLockIllustration from "../components/CyberLockIllustration";
 import CyberTrustCarousel from "../components/CyberTrustCarousel";
 import CyberTechCard from "../components/CyberTechCard";
 
-// Wrapper component using useLottie hook — avoids CJS/ESM default-export interop issue
+// Wrapper component using useLottie hook â€” avoids CJS/ESM default-export interop issue
 function LottieView({ animationData, className }) {
   const { View } = useLottie({ animationData, loop: true, autoplay: true });
   return <div className={className}>{View}</div>;
 }
 
 const features = [
-  { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "🔒" },
-  { title: "Secure Sharing", description: "Share sensitive visuals confidently, knowing they’re encrypted.", icon: "📤" },
-  { title: "High Speed Encryption", description: "Encrypt images quickly without performance lag.", icon: "⚡" },
-  { title: "Cross-Platform Support", description: "Works on all devices and browsers.", icon: "🌐" },
-  { title: "Multi-User Support", description: "Share encrypted files securely within groups.", icon: "👥" },
-  { title: "User-Friendly Interface", description: "Easy-to-use UI for all skill levels.", icon: "🎨" },
-  { title: "Advanced Algorithms", description: "State-of-the-art cryptographic methods.", icon: "🧩" },
-  { title: "Regular Updates", description: "Continuous improvements and security patches.", icon: "🔄" },
+  { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "ðŸ”’" },
+  { title: "Secure Sharing", description: "Share sensitive visuals confidently, knowing theyâ€™re encrypted.", icon: "ðŸ“¤" },
+  { title: "High Speed Encryption", description: "Encrypt images quickly without performance lag.", icon: "âš¡" },
+  { title: "Cross-Platform Support", description: "Works on all devices and browsers.", icon: "ðŸŒ" },
+  { title: "Multi-User Support", description: "Share encrypted files securely within groups.", icon: "ðŸ‘¥" },
+  { title: "User-Friendly Interface", description: "Easy-to-use UI for all skill levels.", icon: "ðŸŽ¨" },
+  { title: "Advanced Algorithms", description: "State-of-the-art cryptographic methods.", icon: "ðŸ§©" },
+  { title: "Regular Updates", description: "Continuous improvements and security patches.", icon: "ðŸ”„" },
 ];
 
 // New encryption technology cards data
@@ -46,12 +46,12 @@ const encryptionTechCards = [
   {
     title: "Zero-Knowledge Architecture",
     description: "We never store or have access to your encryption keys, guaranteeing that your images stay confidential even from us.",
-    icon: "❌",
+    icon: "🛡️",
   },
   {
     title: "Multi-Layer Security",
     description: "Combining symmetric and asymmetric encryption techniques adds multiple protective layers against unauthorized access and tampering.",
-    icon: "🛡️",
+    icon: "⚡",
   },
   {
     title: "Future-Proof Protocols",
@@ -95,8 +95,7 @@ export function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.8 }}
-            className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 pt-12 md:pt-20 pb-10 px-6 md:px-12"
-            style={{ minHeight: "540px" }}
+            className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 pt-8 md:pt-20 pb-8 md:pb-10 px-4 sm:px-6 md:px-12"
           >
             <div className="flex-1 flex justify-center md:justify-end items-center w-full order-1 md:order-2 md:pl-6 lg:pl-10">
               <CyberLockIllustration animationData={encryptionAnimation} />
@@ -126,7 +125,7 @@ export function Home() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
                 <button
                   onClick={() => navigate("/crypt")}
-                  className="group inline-flex items-center gap-2.5 bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-bold px-8 py-3.5 rounded-xl shadow-[0_0_20px_rgba(20,184,166,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.55)] transition-all transform hover:-translate-y-0.5 cursor-pointer text-base"
+                  className="group inline-flex items-center justify-center gap-2.5 bg-linear-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white font-bold px-8 py-3.5 rounded-xl shadow-[0_0_20px_rgba(20,184,166,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.55)] transition-all transform hover:-translate-y-0.5 cursor-pointer text-base w-full sm:w-auto"
                 >
                   <span>Protect Your Image</span>
                   <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -151,7 +150,7 @@ export function Home() {
           </motion.section>
 
       {/* WHY TRUST ON PICRYPT - Swiper Multiple Blocks */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12 md:py-16">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -182,7 +181,7 @@ export function Home() {
       </section>
 
       {/* ENCRYPTION TECHNOLOGY BEHIND PICRYPT */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-12 md:py-16">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -223,7 +222,7 @@ export function Home() {
       </section>
 
       {/* Call to Action */}
-      <section className="text-center w-full py-12">
+      <section className="text-center w-full py-6 sm:py-8 md:py-12">
         <motion.button
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 0.93 }}
@@ -244,37 +243,37 @@ export default Home;
 
 // const features = [
 //   // Expanded example features list for virtualization demo
-//   { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "🔒" },
-//   { title: "Data Integrity", description: "Guard your visual data against tampering or unauthorized copying.", icon: "🛡️" },
-//   { title: "Secure Sharing", description: "Share sensitive visuals confidently, knowing they’re encrypted.", icon: "📤" },
-//   { title: "High Speed Encryption", description: "Encrypt images quickly without performance lag.", icon: "⚡" },
-//   { title: "User-Friendly Interface", description: "Easy-to-use UI for all skill levels.", icon: "🎨" },
-//   { title: "Cross-Platform Support", description: "Works on all devices and browsers.", icon: "🌐" },
-//   { title: "Strong Password Options", description: "Multiple options to secure your encryption keys.", icon: "🔑" },
-//   { title: "Secure File Storage", description: "Encrypted images safely stored in the cloud.", icon: "☁️" },
-//   { title: "Real-Time Processing", description: "Immediate encryption and decryption feedback.", icon: "⏱️" },
-//   { title: "Advanced Algorithms", description: "State-of-the-art cryptographic methods.", icon: "🧩" },
-//   { title: "Open Source", description: "Transparent and community-vetted code.", icon: "💻" },
-//   { title: "Regular Updates", description: "Continuous improvements and security patches.", icon: "🔄" },
-//   { title: "24/7 Customer Support", description: "Always here to help you secure your images.", icon: "🛎️" },
-//   { title: "Multi-Layer Security", description: "Enhanced security with multiple encryption layers.", icon: "🛡️" },
-//   { title: "Offline Mode", description: "Encrypt images without need for internet.", icon: "📴" },
-//   { title: "Customizable Settings", description: "Fine-tune your encryption preferences.", icon: "⚙️" },
-//   { title: "Automatic Backups", description: "Never lose your encrypted files.", icon: "📦" },
-//   { title: "Audit and Logs", description: "Track encryption activities securely.", icon: "📋" },
-//   { title: "Integration APIs", description: "Easily integrate PICRYPT with other apps.", icon: "🔗" },
-//   { title: "Multi-User Support", description: "Share encrypted files securely within groups.", icon: "👥" },
+//   { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "ðŸ”’" },
+//   { title: "Data Integrity", description: "Guard your visual data against tampering or unauthorized copying.", icon: "ðŸ›¡ï¸" },
+//   { title: "Secure Sharing", description: "Share sensitive visuals confidently, knowing theyâ€™re encrypted.", icon: "ðŸ“¤" },
+//   { title: "High Speed Encryption", description: "Encrypt images quickly without performance lag.", icon: "âš¡" },
+//   { title: "User-Friendly Interface", description: "Easy-to-use UI for all skill levels.", icon: "ðŸŽ¨" },
+//   { title: "Cross-Platform Support", description: "Works on all devices and browsers.", icon: "ðŸŒ" },
+//   { title: "Strong Password Options", description: "Multiple options to secure your encryption keys.", icon: "ðŸ”‘" },
+//   { title: "Secure File Storage", description: "Encrypted images safely stored in the cloud.", icon: "â˜ï¸" },
+//   { title: "Real-Time Processing", description: "Immediate encryption and decryption feedback.", icon: "â±ï¸" },
+//   { title: "Advanced Algorithms", description: "State-of-the-art cryptographic methods.", icon: "ðŸ§©" },
+//   { title: "Open Source", description: "Transparent and community-vetted code.", icon: "ðŸ’»" },
+//   { title: "Regular Updates", description: "Continuous improvements and security patches.", icon: "ðŸ”„" },
+//   { title: "24/7 Customer Support", description: "Always here to help you secure your images.", icon: "ðŸ›Žï¸" },
+//   { title: "Multi-Layer Security", description: "Enhanced security with multiple encryption layers.", icon: "ðŸ›¡ï¸" },
+//   { title: "Offline Mode", description: "Encrypt images without need for internet.", icon: "ðŸ“´" },
+//   { title: "Customizable Settings", description: "Fine-tune your encryption preferences.", icon: "âš™ï¸" },
+//   { title: "Automatic Backups", description: "Never lose your encrypted files.", icon: "ðŸ“¦" },
+//   { title: "Audit and Logs", description: "Track encryption activities securely.", icon: "ðŸ“‹" },
+//   { title: "Integration APIs", description: "Easily integrate PICRYPT with other apps.", icon: "ðŸ”—" },
+//   { title: "Multi-User Support", description: "Share encrypted files securely within groups.", icon: "ðŸ‘¥" },
 // ];
 
 
 // const features = [
-//   { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "🔒" },
-//   { title: "Secure Sharing", description: "Share sensitive visuals confidently, knowing they’re encrypted.", icon: "📤" },
-//   { title: "Multi-Layer Security", description: "Enhanced security with multiple encryption layers.", icon: "🛡️" },
-//   { title: "High Speed Encryption", description: "Encrypt images quickly without performance lag.", icon: "⚡" },
-//   { title: "Cross-Platform Support", description: "Works on all devices and browsers.", icon: "🌐" },
-//   { title: "Multi-User Support", description: "Share encrypted files securely within groups.", icon: "👥" },
-//   { title: "User-Friendly Interface", description: "Easy-to-use UI for all skill levels.", icon: "🎨" },
-//   { title: "Advanced Algorithms", description: "State-of-the-art cryptographic methods.", icon: "🧩" },
-//   { title: "Regular Updates", description: "Continuous improvements and security patches.", icon: "🔄" },
+//   { title: "Privacy Protection", description: "Prevent unauthorized access to your personal images.", icon: "ðŸ”’" },
+//   { title: "Secure Sharing", description: "Share sensitive visuals confidently, knowing theyâ€™re encrypted.", icon: "ðŸ“¤" },
+//   { title: "Multi-Layer Security", description: "Enhanced security with multiple encryption layers.", icon: "ðŸ›¡ï¸" },
+//   { title: "High Speed Encryption", description: "Encrypt images quickly without performance lag.", icon: "âš¡" },
+//   { title: "Cross-Platform Support", description: "Works on all devices and browsers.", icon: "ðŸŒ" },
+//   { title: "Multi-User Support", description: "Share encrypted files securely within groups.", icon: "ðŸ‘¥" },
+//   { title: "User-Friendly Interface", description: "Easy-to-use UI for all skill levels.", icon: "ðŸŽ¨" },
+//   { title: "Advanced Algorithms", description: "State-of-the-art cryptographic methods.", icon: "ðŸ§©" },
+//   { title: "Regular Updates", description: "Continuous improvements and security patches.", icon: "ðŸ”„" },
 // ];

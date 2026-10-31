@@ -51,3 +51,14 @@ class History(models.Model):
     def __str__(self):
         return f"{self.action} - {self.carrier_filename} - {self.timestamp}"
     
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    contact_number = models.CharField(max_length=20, blank=True, default='')
+    phone_verified = models.BooleanField(default=False)
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    password_updated_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile of {self.user.username}"

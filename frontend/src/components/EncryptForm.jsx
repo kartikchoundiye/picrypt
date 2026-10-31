@@ -433,7 +433,7 @@ export default function EncryptForm({ isMobileActive }) {
         - Mobile: controlled via isMobileActive
         - Desktop: always visible (md:block)
         ====================================================== */
-        <div className={`${isMobileActive ? "block" : "hidden"} md:block md:h-full`}>
+        <div className="w-full md:h-full flex flex-col">
             <div className="relative edp-panel-base edp-panel-encrypt rounded-2xl overflow-hidden p-5 sm:p-7 shadow-[0_15px_45px_rgba(0,0,0,0.65)] md:h-full flex flex-col">
 
                 {/* 1. TRAVELING PERIMETER NEON BORDER BEAM */}
@@ -640,7 +640,7 @@ export default function EncryptForm({ isMobileActive }) {
                         className="hidden"
                     />
 
-                    <div className="flex items-center gap-3 w-full">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full">
                         <button
                             type="button"
                             onClick={() => encFilesInputRef.current?.click()}

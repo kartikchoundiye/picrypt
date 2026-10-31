@@ -155,7 +155,7 @@ export default function DecryptForm({ isMobileActive }) {
     }
 
     return (
-        <div className={`${isMobileActive ? "block" : "hidden"} md:block md:h-full`}>
+        <div className="w-full md:h-full flex flex-col">
             <div className="relative edp-panel-base edp-panel-decrypt rounded-2xl overflow-hidden p-5 sm:p-7 shadow-[0_15px_45px_rgba(0,0,0,0.65)] md:h-full flex flex-col">
 
                 {/* 1. TRAVELING PERIMETER NEON BORDER BEAM (Emerald Identity) */}
