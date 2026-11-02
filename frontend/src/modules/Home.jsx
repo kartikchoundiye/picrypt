@@ -226,7 +226,7 @@ export function Home() {
         <motion.button
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 0.93 }}
-          onClick={() => navigate("/crypt")}
+          onClick={() => navigate("/register")}
           className="mx-auto bg-teal-600 text-white px-8 py-4 rounded-lg font-bold text-lg shadow hover:bg-teal-700 transition-all cursor-pointer"
         >
           Get Started Now
