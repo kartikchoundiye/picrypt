@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 // import { formatSize } from "../utils/sizeFormat";
 import ConfirmModal from "./ConfirmModal";
+import { DecryptContainerArtwork } from "./CyberContainerArtworks";
 
 import { ENDPOINTS } from "../utils/api";
 
@@ -154,131 +155,193 @@ export default function DecryptForm({ isMobileActive }) {
     }
 
     return (
-        <div className={`${isMobileActive ? "block" : "hidden"} md:block`}>
-            <div className="relative">
-                <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-linear-to-b from-emerald-400 to-emerald-400" />
-                <div className="pl-4">
-                    <form
-                        onSubmit={handleDecrypt}
-                        className="rounded-2xl bg-linear-to-b from-white to-emerald-50/60 backdrop-blur border border-emerald-200 shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6 space-y-4"
-                    >
-                        <div className="relative flex items-center">
-                            {/* CENTER: Heading */}
-                            <div className="mx-auto text-center">
-                                <h3 className="flex items-center font-semibold justify-center text-gray-800 ">🔑 Decrypt data</h3>
-                            </div>
+        <div className="w-full md:h-full flex flex-col">
+            <div className="relative edp-panel-base edp-panel-decrypt rounded-2xl overflow-hidden p-5 sm:p-7 shadow-[0_15px_45px_rgba(0,0,0,0.65)] md:h-full flex flex-col">
 
-                            {/* RIGHT: Clear button */}
-                            <div className="absolute right-0">
-                                <button
-                                    type="button"
-                                    onClick={requestDecryptClear}
-                                    disabled={decLoading || !isDecryptFormDirty}
-                                    title="Ctrl + Shift + D"
-                                    className={`text-sm px-2 py-1 rounded ${decLoading || !isDecryptFormDirty
-                                        ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                                        : "bg-gray-100 hover:bg-gray-200"
-                                        }`}
-                                >
-                                    ♻️ Clear
-                                </button>
+                {/* 1. TRAVELING PERIMETER NEON BORDER BEAM (Emerald Identity) */}
+                <svg className="ctc-border-svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="edpDecGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#00D6A0">
+                                <animate attributeName="stop-color" values="#00D6A0;#06B6D4;#10B981;#00D6A0" dur="6s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="50%" stopColor="#06B6D4">
+                                <animate attributeName="stop-color" values="#06B6D4;#10B981;#00D6A0;#06B6D4" dur="6s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="100%" stopColor="#10B981">
+                                <animate attributeName="stop-color" values="#10B981;#00D6A0;#06B6D4;#10B981" dur="6s" repeatCount="indefinite" />
+                            </stop>
+                        </linearGradient>
+                        <filter id="edpDecGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="3.5" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="16" pathLength="1000" className="etc-border-track" />
+                    <rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="16" pathLength="1000" fill="none" stroke="url(#edpDecGrad)" strokeWidth="2.5" strokeLinecap="round" className="edp-beam-decrypt" filter="url(#edpDecGlow)" />
+                </svg>
+
+                {/* 2. CYBERNETIC CORNER BRACKETS */}
+                <div className="ctc-corner-bracket top-left edp-corner-emerald" aria-hidden="true" />
+                <div className="ctc-corner-bracket top-right edp-corner-emerald" aria-hidden="true" />
+                <div className="ctc-corner-bracket bottom-left edp-corner-emerald" aria-hidden="true" />
+                <div className="ctc-corner-bracket bottom-right edp-corner-emerald" aria-hidden="true" />
+
+                {/* 3. CYBERSECURITY CONTAINER BACKGROUND ARTWORK */}
+                <DecryptContainerArtwork />
+
+                {/* ==================== DECRYPTION FORM ======================= */}
+                <form
+                    onSubmit={handleDecrypt}
+                    className="relative z-10 space-y-4 text-slate-200"
+                >
+                    {/* FORM HEADER */}
+                    <div className="relative flex items-center mb-2">
+                        {/* CENTER: Heading & Holographic Icon */}
+                        <div className="mx-auto text-center flex items-center justify-center gap-3">
+                            <div className="edp-icon-aperture edp-aperture-emerald flex items-center justify-center text-lg">
+                                <span>🔑</span>
                             </div>
+                            <h3 className="font-bold text-lg text-white tracking-wide">
+                                Decrypt Data
+                            </h3>
                         </div>
 
-                        {showDecClearConfirm && (
-                            <ConfirmModal
-                                message="🧹 Clear decryption form ?"
-                                onCancel={() => setShowDecClearConfirm(false)}
-                                onConfirm={clearDecryptForm}
-                            />
-                        )}
-
-                        <label className="block mb-1">Stego Image</label>
-                        <input
-                            ref={decCarrierInputRef}
-                            type="file"
-                            accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp"
-                            onChange={e => handleDecCarrierSelect(e.target.files[0] || null)}
-                            className="hidden"
-                        />
-
-                        <div className="flex items-start gap-2 w-full">
+                        {/* RIGHT: Clear button */}
+                        <div className="absolute right-0">
                             <button
                                 type="button"
-                                onClick={() => decCarrierInputRef.current?.click()}
-                                className="px-4 py-2.5 bg-gray-200 rounded-md hover:bg-gray-300 text-sm shrink-0"
+                                onClick={requestDecryptClear}
+                                disabled={decLoading || !isDecryptFormDirty}
+                                title="Ctrl + Shift + D"
+                                className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${
+                                    decLoading || !isDecryptFormDirty
+                                        ? "border-slate-800 bg-[#0d1627]/60 text-slate-600 cursor-not-allowed"
+                                        : "border-emerald-500/30 bg-[#132038] hover:bg-[#1a2d50] text-emerald-300 hover:text-white shadow-sm cursor-pointer"
+                                }`}
                             >
-                                Browse
+                                ♻️ Clear
                             </button>
-
-                            <div className="flex items-start border border-gray-300 rounded-md px-3 py-2.5 flex-1 min-w-0 bg-gray-50 hover:bg-gray-100 transition-colors">
-                                {!decCarrier ? (
-                                    <span className="text-sm text-gray-400">
-                                        Choose stego image
-                                    </span>
-                                ) : (
-                                    <>
-                                        <span
-                                            className={`text-xs text-gray-700 cursor-pointer ${showDecCarrierFullName
-                                                ? "whitespace-normal break-all"
-                                                : "truncate flex-1"
-                                                }`}
-                                            title={decCarrier.name}
-                                            onClick={() => setShowDecCarrierFullName(v => !v)}
-                                        >
-                                            {decCarrier.name}
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            onClick={removeDecCarrier}
-                                            className="ml-auto pl-3 text-green-500 hover:text-red-600 shrink-0 items-start"
-                                            title="Remove stego image"
-                                        >
-                                            ✖
-                                        </button>
-                                    </>
-                                )}
-                            </div>
                         </div>
+                    </div>
 
-                        {decCarrierError && (
-                            <div className="text-sm text-red-600 mt-1">
-                                {decCarrierError}
-                            </div>
-                        )}
+                    {/* CLEAR CONFIRMATION MODAL */}
+                    {showDecClearConfirm && (
+                        <ConfirmModal
+                            message="🧹 Clear decryption form ?"
+                            onCancel={() => setShowDecClearConfirm(false)}
+                            onConfirm={clearDecryptForm}
+                        />
+                    )}
 
-                        <label className="block mt-4 mb-1 text-sm font-medium">
-                            Decryption Key
-                        </label>
+                    {/* ============ STEGO IMAGE INPUT ============== */}
+                    <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-emerald-300">
+                        Stego Image
+                    </label>
 
-                        <div className="relative">
-                            <input
-                                type={"password"}
-                                value={decPassphrase}
-                                onChange={e => setDecPassphrase(e.target.value)}
-                                placeholder="Enter decryption key"
-                                className="border border-gray-300 rounded-md px-3 py-2.5 w-full pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-                            />
-                        </div>
+                    <input
+                        ref={decCarrierInputRef}
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp"
+                        onChange={e => handleDecCarrierSelect(e.target.files[0] || null)}
+                        className="hidden"
+                    />
 
-                        <p className="mt-1 text-xs text-gray-500">
-                            Must match the encryption key used earlier.
-                        </p>
-
+                    <div className="flex items-start gap-2 w-full">
                         <button
-                            type="submit"
-                            disabled={decLoading}
-                            className={`mt-3 px-4 py-2.5 w-full rounded-md text-sm text-white ${decLoading ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700"}`}
+                            type="button"
+                            onClick={() => decCarrierInputRef.current?.click()}
+                            className="px-4 py-2.5 bg-[#14262c] hover:bg-[#1b353e] text-emerald-300 hover:text-white border border-emerald-500/35 rounded-lg text-sm font-medium shrink-0 transition-colors cursor-pointer"
                         >
-                            {decLoading ? "Decrypting…" : "Decrypt"}
+                            Browse
                         </button>
 
-                        {decMessage && <div className="mt-3 p-2 bg-gray-50 text-sm rounded">{decMessage}</div>}
-                    </form>
-                </div>
+                        <div className="flex items-start border border-emerald-500/25 rounded-lg px-3 py-2.5 flex-1 min-w-0 bg-[#09161a]/80 hover:border-emerald-500/40 transition-colors">
+                            {!decCarrier ? (
+                                <span className="text-sm text-slate-500">
+                                    Choose stego image
+                                </span>
+                            ) : (
+                                <>
+                                    <span
+                                        className={`text-xs text-slate-200 cursor-pointer ${showDecCarrierFullName
+                                            ? "whitespace-normal break-all"
+                                            : "truncate flex-1"
+                                            }`}
+                                        title={decCarrier.name}
+                                        onClick={() => setShowDecCarrierFullName(v => !v)}
+                                    >
+                                        {decCarrier.name}
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        onClick={removeDecCarrier}
+                                        className="ml-auto pl-3 text-emerald-400 hover:text-red-400 shrink-0 text-sm transition-colors cursor-pointer"
+                                        title="Remove stego image"
+                                    >
+                                        ✖
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {decCarrierError && (
+                        <div className="text-xs text-red-400 mt-1 bg-red-950/40 border border-red-500/30 p-2 rounded-lg">
+                            {decCarrierError}
+                        </div>
+                    )}
+
+                    {/* ---------- Decryption Key input ----------*/}
+                    <label className="block mt-4 mb-1 text-xs font-semibold uppercase tracking-wider text-emerald-300">
+                        Decryption Key
+                    </label>
+
+                    <div className="relative">
+                        <input
+                            type={"password"}
+                            value={decPassphrase}
+                            onChange={e => setDecPassphrase(e.target.value)}
+                            placeholder="Enter decryption key"
+                            className="border border-emerald-500/30 rounded-lg px-3.5 py-2.5 w-full pr-10 text-sm bg-[#09161a]/90 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/60 focus:border-emerald-400 transition-all font-mono"
+                        />
+                    </div>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                        Must match the encryption key used earlier.
+                    </p>
+
+                    {/* =========== Decrypt Button ============= */}
+                    <button
+                        type="submit"
+                        disabled={decLoading}
+                        className={`mt-4 px-4 py-3.5 w-full rounded-xl text-sm font-bold tracking-wide uppercase text-white bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 hover:from-emerald-400 hover:to-teal-400 shadow-[0_0_20px_rgba(0,214,160,0.35)] hover:shadow-[0_0_30px_rgba(0,214,160,0.6)] transition-all transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2`}
+                    >
+                        {decLoading ? (
+                            <>
+                                <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin inline-block" />
+                                <span>Decrypting…</span>
+                            </>
+                        ) : (
+                            <span>🔑 Decrypt</span>
+                        )}
+                    </button>
+
+                    {decMessage && (
+                        <div className={`mt-3 p-3 rounded-xl text-xs border flex items-center gap-2 shadow-inner ${
+                            decMessage.includes("failed") || decMessage.includes("error")
+                                ? "border-red-500/40 bg-red-950/40 text-red-200"
+                                : "border-emerald-500/30 bg-[#09161a]/90 text-emerald-200"
+                        }`}>
+                            {decMessage}
+                        </div>
+                    )}
+                </form>
             </div>
         </div>
     );
 }
-

@@ -20,13 +20,17 @@ const getApiBaseUrl = () => {
     }
   }
 
-  return "/api";
+  return "https://picrypt.onrender.com/api";
 };
 
 export const API_BASE_URL = getApiBaseUrl();
 
 export const ENDPOINTS = {
   AUTH: `${API_BASE_URL}/auth`,
+  PROFILE: `${API_BASE_URL}/auth/profile/`,
+  EMAIL_CHANGE_OTP: `${API_BASE_URL}/auth/profile/email-change-otp/`,
+  EMAIL_CHANGE_VERIFY: `${API_BASE_URL}/auth/profile/email-change-verify/`,
+  CHANGE_PASSWORD: `${API_BASE_URL}/auth/profile/change-password/`,
   STEGHIDE: `${API_BASE_URL}/steghide`,
   ENCRYPT: `${API_BASE_URL}/steghide/encrypt/`,
   DECRYPT: `${API_BASE_URL}/steghide/decrypt/`,

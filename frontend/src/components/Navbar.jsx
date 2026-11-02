@@ -46,19 +46,21 @@ const Navbar = () => {
 
   const getLinkClasses = ({ isActive }) =>
     `text-sm font-semibold p-2 rounded-md transition duration-200 
-     ${isActive ? 'text-teal-400 border-b-2 border-teal-400' : 'text-gray-300 hover:text-teal-400 hover:bg-gray-700'}
-     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-teal-400`;
+     ${isActive ? 'text-cyan-400 border-b-2 border-cyan-400 drop-shadow-[0_0_8px_rgba(0,217,245,0.5)]' : 'text-slate-300 hover:text-cyan-400 hover:bg-cyan-950/40'}
+     focus:outline-none focus:ring-2 focus:ring-cyan-400`;
 
   return (
-    <nav className="bg-gray-800 shadow-lg fixed w-full z-50">
+    <nav className="bg-[#070D1A]/95 border-b border-cyan-500/20 backdrop-blur-md shadow-[0_4px_25px_rgba(0,0,0,0.5)] fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
           <div className="flex items-center shrink-0">
             <Link to="/" className="flex items-center">
-              <img className="h-14 w-auto object-contain" src={logo} alt="PICRYPT Logo" />
-              <span className="ml-2 text-xl font-bold text-white tracking-wider">PICRYPT</span>
+              <img className="h-9 sm:h-12 w-auto object-contain" src={logo} alt="PICRYPT Logo" />
+              <span className="ml-2 text-lg sm:text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-400 tracking-wider">
+                PICRYPT
+              </span>
             </Link>
           </div>
 
@@ -76,27 +78,55 @@ const Navbar = () => {
           {/* Right side: profile / register */}
           <div className="hidden md:flex items-center space-x-4">
             {!loggedIn ? (
-              <Link to="/register" className="ml-4 px-4 py-2 text-sm font-semibold rounded-lg bg-teal-700 text-white shadow-md hover:bg-teal-800 transition duration-200">
+              <Link
+                to="/register"
+                className="ml-4 px-4 py-2 text-sm font-bold rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-white shadow-[0_0_15px_rgba(0,217,245,0.35)] hover:shadow-[0_0_25px_rgba(0,217,245,0.55)] transition duration-200"
+              >
                 Register / Login
               </Link>
             ) : (
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen((p) => !p)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-700 focus:outline-none"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-xl hover:bg-cyan-950/50 border border-cyan-500/20 focus:outline-none cursor-pointer"
                 >
-                  {/* Profile icon (first char of username) */}
-                  <div className="h-8 w-8 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold shadow-[0_0_10px_rgba(0,217,245,0.4)]">
                     {user?.username ? user.username[0].toUpperCase() : "U"}
                   </div>
                 </button>
 
                 {profileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
-                    <div className="px-4 py-2 text-sm text-gray-700 border-b">{user?.username}</div>
-                    <button onClick={() => { navigate('/dashboard'); setProfileOpen(false); }} className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">Profile</button>
-                    <button onClick={logout} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</button>
-                  </div>
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                    <div className="absolute right-0 mt-2 min-w-[15rem] w-max max-w-[calc(100vw-2rem)] sm:max-w-md bg-[#0c1629] border border-cyan-500/30 rounded-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] py-2 z-50 backdrop-blur-xl">
+                      <div className="px-4 py-2 border-b border-cyan-500/20 bg-cyan-950/25">
+                        <div className="text-[10px] font-mono uppercase tracking-widest text-cyan-400/80 mb-0.5">
+                          Authenticated User
+                        </div>
+                        <div
+                          className="text-xs font-mono font-medium text-cyan-300 whitespace-nowrap overflow-hidden text-ellipsis select-all"
+                          title={user?.username}
+                        >
+                          {user?.username}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          navigate('/profile');
+                          setProfileOpen(false);
+                        }}
+                        className="w-full flex items-center space-x-2 text-left px-4 py-2.5 text-sm text-slate-200 hover:bg-cyan-950/60 hover:text-cyan-300 transition-colors cursor-pointer"
+                      >
+                        <span>Profile & Security</span>
+                      </button>
+                      <button
+                        onClick={logout}
+                        className="w-full flex items-center space-x-2 text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors cursor-pointer"
+                      >
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
             )}
@@ -106,7 +136,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700"
+              className="inline-flex items-center justify-center p-2 rounded-xl text-cyan-400 hover:text-white hover:bg-cyan-950/60 border border-cyan-500/25 transition cursor-pointer"
             >
               {!isOpen ? (
                 <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,14 +153,14 @@ const Navbar = () => {
       </div>
 
       {/* Mobile menu */}
-      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden border-t border-gray-700`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden border-t border-cyan-500/20 bg-[#070D1A]/98 backdrop-blur-xl shadow-2xl`}>
+        <div className="px-4 pt-3 pb-4 space-y-2">
           {navLinks.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className={({ isActive }) => `block px-3 py-2 rounded-md text-base font-medium transition duration-200 ${isActive ? 'bg-teal-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-teal-400'}`}
+              className={({ isActive }) => `block px-3.5 py-2.5 rounded-xl text-sm font-semibold transition duration-200 ${isActive ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-500/40 shadow-[0_0_12px_rgba(0,217,245,0.25)]' : 'text-slate-300 hover:bg-cyan-950/40 hover:text-cyan-300'}`}
             >
               {link.name}
             </NavLink>
@@ -138,24 +168,28 @@ const Navbar = () => {
 
           {/* In mobile menu we show either register/login or profile block */}
           {loggedIn ? (
-            <div className="mt-2 px-3 py-2 bg-gray-800 rounded-md">
+            <div className="mt-3 p-3 bg-[#0c1629] border border-cyan-500/25 rounded-xl">
               <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-teal-500 flex items-center justify-center text-white font-bold">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold shadow-[0_0_10px_rgba(0,217,245,0.4)]">
                   {user?.username ? user.username[0].toUpperCase() : "U"}
                 </div>
-                <div className="text-white">
-                  <div className="font-semibold">{user?.username}</div>
-                  <div className="text-sm text-gray-300">Signed in</div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold text-white text-sm truncate" title={user?.username}>{user?.username}</div>
+                  <div className="text-xs text-cyan-400 font-mono">Authenticated</div>
                 </div>
               </div>
 
               <div className="mt-3 flex space-x-2">
-                <button onClick={() => { setIsOpen(false); navigate('/dashboard'); }} className="flex-1 py-2 text-sm rounded bg-teal-600 text-white">Profile</button>
-                <button onClick={() => { setIsOpen(false); logout(); }} className="flex-1 py-2 text-sm rounded border border-red-500 text-red-500">Logout</button>
+                <button onClick={() => { setIsOpen(false); navigate('/profile'); }} className="flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded-lg bg-teal-600 hover:bg-teal-500 text-white transition">Profile</button>
+                <button onClick={() => { setIsOpen(false); logout(); }} className="flex-1 py-2 text-xs font-bold uppercase tracking-wider rounded-lg border border-red-500/40 text-red-400 hover:bg-red-950/40 transition">Logout</button>
               </div>
             </div>
           ) : (
-            <Link to="/register" onClick={() => setIsOpen(false)} className="block w-full mt-2 px-3 py-2 text-base font-semibold rounded-md bg-teal-700 text-white hover:bg-teal-800 text-center">
+            <Link
+              to="/register"
+              onClick={() => setIsOpen(false)}
+              className="block w-full mt-3 px-4 py-2.5 text-center text-sm font-bold uppercase tracking-wider rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-[0_0_15px_rgba(0,217,245,0.35)]"
+            >
               Register / Login
             </Link>
           )}
@@ -166,19 +200,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

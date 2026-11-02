@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils import timezone
-from .models import OTP
+from .models import OTP, UserProfile
 from .utils import generate_and_send_otp 
 from .utils_stego import *
 from .serializers import MyTokenObtainPairSerializer
@@ -391,3 +391,237 @@ class CarrierInfoView(APIView):
             return Response(info, status=200)
         except Exception as e:
             return Response({"error": str(e)}, status=400)
+
+
+# ==============================================================
+# PICRYPT PROFILE & ACCOUNT SECURITY VIEWS
+# ==============================================================
+
+import re
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
+class UserProfileView(APIView):
+    """
+    GET: Retrieves the authenticated user's profile and security status.
+    PUT/PATCH: Updates username, contact_number, and avatar.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        profile, _ = UserProfile.objects.get_or_create(
+            user=user,
+            defaults={"password_updated_at": user.date_joined}
+        )
+        avatar_url = request.build_absolute_uri(profile.avatar.url) if profile.avatar else None
+
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "contact_number": profile.contact_number,
+            "phone_verified": profile.phone_verified,
+            "date_joined": user.date_joined.isoformat(),
+            "last_login": user.last_login.isoformat() if user.last_login else None,
+            "is_active": user.is_active,
+            "email_verified": True,
+            "avatar_url": avatar_url,
+            "password_updated_at": (profile.password_updated_at or user.date_joined).isoformat(),
+        }, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        user = request.user
+        profile, _ = UserProfile.objects.get_or_create(
+            user=user,
+            defaults={"password_updated_at": user.date_joined}
+        )
+
+        # 1. Username validation & update
+        username = request.data.get("username", "").strip()
+        if username:
+            if len(username) < 3:
+                return Response({"error": "Username must be at least 3 characters long."}, status=status.HTTP_400_BAD_REQUEST)
+            if not re.match(r"^[a-zA-Z0-9_@.+-]+$", username):
+                return Response({"error": "Username can only contain alphanumeric characters, underscores, hyphens, and periods."}, status=status.HTTP_400_BAD_REQUEST)
+            if User.objects.filter(username=username).exclude(id=user.id).exists():
+                return Response({"error": f"Username '{username}' is already taken by another account."}, status=status.HTTP_400_BAD_REQUEST)
+            user.username = username
+            user.save()
+
+        # 2. Contact number update
+        contact_number = request.data.get("contact_number")
+        if contact_number is not None:
+            clean_number = contact_number.strip()
+            if clean_number and not re.match(r"^[\+]?[(]?[0-9]{1,4}[)]?[-\s\./0-9]{6,15}$", clean_number):
+                return Response({"error": "Please enter a valid phone number (7 to 15 digits, optional country code)."}, status=status.HTTP_400_BAD_REQUEST)
+            profile.contact_number = clean_number
+            profile.save()
+
+        # 3. Avatar image upload
+        avatar = request.FILES.get("avatar")
+        if avatar:
+            ext = os.path.splitext(avatar.name)[1].lower().lstrip(".")
+            if ext not in ["jpg", "jpeg", "png", "webp"]:
+                return Response({"error": "Invalid avatar format. Allowed formats: JPG, JPEG, PNG, WEBP."}, status=status.HTTP_400_BAD_REQUEST)
+            if avatar.size > 5 * 1024 * 1024:  # 5MB limit
+                return Response({"error": "Avatar file size exceeds the 5MB limit."}, status=status.HTTP_400_BAD_REQUEST)
+            profile.avatar = avatar
+            profile.save()
+
+        avatar_url = request.build_absolute_uri(profile.avatar.url) if profile.avatar else None
+
+        return Response({
+            "message": "Profile updated successfully.",
+            "profile": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "contact_number": profile.contact_number,
+                "phone_verified": profile.phone_verified,
+                "date_joined": user.date_joined.isoformat(),
+                "last_login": user.last_login.isoformat() if user.last_login else None,
+                "is_active": user.is_active,
+                "email_verified": True,
+                "avatar_url": avatar_url,
+                "password_updated_at": (profile.password_updated_at or user.date_joined).isoformat(),
+            }
+        }, status=status.HTTP_200_OK)
+
+
+class EmailChangeSendOTPView(APIView):
+    """
+    Validates new email address and sends an OTP verification code.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        new_email = request.data.get("new_email", "").strip().lower()
+
+        if not new_email:
+            return Response({"error": "New email address is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            validate_email(new_email)
+        except ValidationError:
+            return Response({"error": "Please provide a valid email address format."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if new_email == request.user.email.strip().lower():
+            return Response({"error": "The new email address cannot be the same as your current registered email."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(email=new_email).exclude(id=request.user.id).exists():
+            return Response({"error": "This email address is already associated with another PICRYPT account."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check rate-limiting (e.g. 30 second cooldown)
+        existing_otp = OTP.objects.filter(email=new_email).first()
+        if existing_otp and (timezone.now() - existing_otp.created_at).total_seconds() < 30:
+            remaining = int(30 - (timezone.now() - existing_otp.created_at).total_seconds())
+            return Response({"error": f"Please wait {remaining}s before requesting a new OTP."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+
+        success = generate_and_send_otp(new_email)
+        if not success:
+            return Response({"error": "Failed to send verification code. Please check the email or try again later."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"message": f"Verification code sent to {new_email}."}, status=status.HTTP_200_OK)
+
+
+class EmailChangeVerifyView(APIView):
+    """
+    Verifies OTP and securely updates the user's registered email address.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        new_email = request.data.get("new_email", "").strip().lower()
+        otp_code = request.data.get("otp", "").strip()
+
+        if not new_email or not otp_code:
+            return Response({"error": "Both new email and verification OTP are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            otp_obj = OTP.objects.get(email=new_email)
+        except OTP.DoesNotExist:
+            return Response({"error": "No pending verification code found for this email. Please request a new code."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if otp_obj.otp_code != otp_code:
+            return Response({"error": "Invalid verification code. Please check and try again."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if otp_obj.is_expired():
+            otp_obj.delete()
+            return Response({"error": "Verification code has expired. Please request a new one."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check uniqueness again to prevent race conditions
+        if User.objects.filter(email=new_email).exclude(id=request.user.id).exists():
+            return Response({"error": "This email address is already registered to another account."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        old_email = user.email
+
+        # If user's username was their old email, update username too
+        if user.username == old_email:
+            user.username = new_email
+
+        user.email = new_email
+        user.save()
+
+        # Clean up verified OTP
+        otp_obj.delete()
+
+        return Response({
+            "message": "Email address verified and updated successfully.",
+            "email": new_email,
+            "username": user.username
+        }, status=status.HTTP_200_OK)
+
+
+class ChangePasswordView(APIView):
+    """
+    Secure password change with validation and password hash update.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        current_password = request.data.get("current_password", "")
+        new_password = request.data.get("new_password", "")
+        confirm_password = request.data.get("confirm_password", "")
+
+        if not current_password or not new_password or not confirm_password:
+            return Response({"error": "All password fields are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        if not user.check_password(current_password):
+            return Response({"error": "Your current password is incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if new_password != confirm_password:
+            return Response({"error": "New password and confirmation do not match."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if current_password == new_password:
+            return Response({"error": "Your new password cannot be the same as your current password."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Strong password requirements check
+        if len(new_password) < 8:
+            return Response({"error": "Password must be at least 8 characters long."}, status=status.HTTP_400_BAD_REQUEST)
+        if not re.search(r"[A-Z]", new_password):
+            return Response({"error": "Password must contain at least one uppercase letter (A-Z)."}, status=status.HTTP_400_BAD_REQUEST)
+        if not re.search(r"[a-z]", new_password):
+            return Response({"error": "Password must contain at least one lowercase letter (a-z)."}, status=status.HTTP_400_BAD_REQUEST)
+        if not re.search(r"[0-9]", new_password):
+            return Response({"error": "Password must contain at least one digit (0-9)."}, status=status.HTTP_400_BAD_REQUEST)
+        if not re.search(r"[\W_]", new_password):
+            return Response({"error": "Password must contain at least one special character (!@#$%^&* etc.)."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Set and hash new password
+        user.set_password(new_password)
+        user.save()
+
+        # Update profile password timestamp
+        profile, _ = UserProfile.objects.get_or_create(
+            user=user,
+            defaults={"password_updated_at": user.date_joined}
+        )
+        profile.password_updated_at = timezone.now()
+        profile.save()
+
+        return Response({
+            "message": "Password changed successfully. Your account is now secured with your new password."
+        }, status=status.HTTP_200_OK)

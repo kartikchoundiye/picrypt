@@ -29,10 +29,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 # Commented by agent, reason: Automatically support Render hostnames alongside user configured ALLOWED_HOSTS
-# _allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+# _allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,picrypt.onrender.com,.onrender.com')
 # ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_str.split(',') if h.strip()]
 # End commented by agent
-_allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost')
+_allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,testserver,picrypt.onrender.com,.onrender.com')
 ALLOWED_HOSTS = [h.strip() for h in _allowed_hosts_str.split(',') if h.strip()]
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
@@ -76,7 +76,7 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
-_csrf_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+_csrf_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://picrypt.onrender.com')
 CSRF_TRUSTED_ORIGINS = [u.strip() for u in _csrf_origins_str.split(',') if u.strip()]
 for origin in CORS_ALLOWED_ORIGINS:
     if (origin.startswith('http://') or origin.startswith('https://')) and origin not in CSRF_TRUSTED_ORIGINS:
@@ -259,8 +259,8 @@ PBKDF2_ITERATIONS = 200000
 AES_GCM_IV_LENGTH = 12
 DEFAULT_MAX_PAYLOAD_BYTES = 1_000_000  # 1 MB default
 
-# Production Security & SSL Settings (Automatically applied when DEBUG=False in production)
-if not DEBUG:
+# Production Security & SSL Settings (Automatically applied when running in cloud production e.g. Render)
+if not DEBUG and os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
     # Tell Django behind Render's reverse-proxy that requests are HTTPS
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True').lower() in ('true', '1')
@@ -269,4 +269,13 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+elif not DEBUG:
+    # Non-cloud production or local production testing
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1')
+    SESSION_COOKIE_SECURE = SECURE_SSL_REDIRECT
+    CSRF_COOKIE_SECURE = SECURE_SSL_REDIRECT
+    if SECURE_SSL_REDIRECT:
+        SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000'))
+        SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+        SECURE_HSTS_PRELOAD = True
 

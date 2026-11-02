@@ -20,6 +20,7 @@ import {
 
 import picryptLogo from "../assets/picrypt_logo.png";
 import ConfirmModal from "./ConfirmModal";
+import { EncryptContainerArtwork } from "./CyberContainerArtworks";
 
 
 import { ENDPOINTS } from "../utils/api";
@@ -432,377 +433,373 @@ export default function EncryptForm({ isMobileActive }) {
         - Mobile: controlled via isMobileActive
         - Desktop: always visible (md:block)
         ====================================================== */
-        <div className={`${isMobileActive ? "block" : "hidden"} md:block`}>
-            <div className="relative">
+        <div className="w-full md:h-full flex flex-col">
+            <div className="relative edp-panel-base edp-panel-encrypt rounded-2xl overflow-hidden p-5 sm:p-7 shadow-[0_15px_45px_rgba(0,0,0,0.65)] md:h-full flex flex-col">
 
-                {/* =================== LEFT GRADIENT ACCENT BAR (Visual identity)================= */}
-                <div className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-linear-to-b from-cyan-400 to-blue-400" />
-                <div className="pl-4">
+                {/* 1. TRAVELING PERIMETER NEON BORDER BEAM */}
+                <svg className="ctc-border-svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="edpEncGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#00D9F5">
+                                <animate attributeName="stop-color" values="#00D9F5;#398BFF;#06B6D4;#00D9F5" dur="6s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="50%" stopColor="#398BFF">
+                                <animate attributeName="stop-color" values="#398BFF;#06B6D4;#00D9F5;#398BFF" dur="6s" repeatCount="indefinite" />
+                            </stop>
+                            <stop offset="100%" stopColor="#06B6D4">
+                                <animate attributeName="stop-color" values="#06B6D4;#00D9F5;#398BFF;#06B6D4" dur="6s" repeatCount="indefinite" />
+                            </stop>
+                        </linearGradient>
+                        <filter id="edpEncGlow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="3.5" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="16" pathLength="1000" className="etc-border-track" />
+                    <rect x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="16" pathLength="1000" fill="none" stroke="url(#edpEncGrad)" strokeWidth="2.5" strokeLinecap="round" className="edp-beam-encrypt" filter="url(#edpEncGlow)" />
+                </svg>
 
-                    {/* ==================== ENCRYPTION FORM CONTAINER ======================= */}
-                    <form
-                        onSubmit={handleEncrypt}
-                        className="rounded-2xl bg-linear-to-b from-white to-cyan-50/60 backdrop-blur border border-cyan-200 shadow-sm hover:shadow-md transition-shadow p-5 sm:p-6 space-y-4"
-                    >
-                        {/* ======================================================
-                            FORM HEADER
-                            - Centered title
-                            - Right-aligned clear button
-                        ====================================================== */}
-                        <div className="relative flex items-center">
+                {/* 2. CYBERNETIC CORNER BRACKETS */}
+                <div className="ctc-corner-bracket top-left" aria-hidden="true" />
+                <div className="ctc-corner-bracket top-right" aria-hidden="true" />
+                <div className="ctc-corner-bracket bottom-left" aria-hidden="true" />
+                <div className="ctc-corner-bracket bottom-right" aria-hidden="true" />
 
-                            {/* CENTER: Heading */}
+                {/* 3. CYBERSECURITY CONTAINER BACKGROUND ARTWORK */}
+                <EncryptContainerArtwork />
 
-                            <div className="mx-auto text-center">
-                                <h3 className="flex items-center justify-center gap-2 font-semibold text-gray-800">
-                                    <img
-                                        src={picryptLogo}
-                                        alt="PICRYPT"
-                                        className="w-6 h-6 object-contain"
-                                    />
-                                    <span>Encrypt Data</span>
-                                </h3>
+                {/* ==================== ENCRYPTION FORM ======================= */}
+                <form
+                    onSubmit={handleEncrypt}
+                    className="relative z-10 space-y-4 text-slate-200"
+                >
+                    {/* FORM HEADER */}
+                    <div className="relative flex items-center mb-2">
+                        {/* CENTER: Heading & Holographic Icon */}
+                        <div className="mx-auto text-center flex items-center justify-center gap-3">
+                            <div className="edp-icon-aperture edp-aperture-cyan flex items-center justify-center">
+                                <img
+                                    src={picryptLogo}
+                                    alt="PICRYPT"
+                                    className="w-5 h-5 object-contain"
+                                />
                             </div>
-
-                            {/* RIGHT: Clear button */}
-
-                            <div className="absolute right-0">
-                                <button
-                                    type="button"
-                                    onClick={requestEncryptClear}
-                                    disabled={encLoading || !isEncryptFormDirty}
-                                    title="Ctrl + Shift + E"
-                                    className={`text-sm px-2 py-1 rounded ${encLoading || !isEncryptFormDirty
-                                        ? "bg-gray-300 cursor-not-allowed text-gray-600"
-                                        : "bg-gray-100 hover:bg-gray-200"
-                                        }`}
-                                >
-                                    ♻️ Clear
-                                </button>
-                            </div>
+                            <h3 className="font-bold text-lg text-white tracking-wide">
+                                Encrypt Data
+                            </h3>
                         </div>
 
-                        {/* ===================== CLEAR CONFIRMATION MODAL =============== */}
-
-                        {showEncClearConfirm && (
-                            <ConfirmModal
-                                message="🧹 Clear encryption form ?"
-                                onCancel={() => setShowEncClearConfirm(false)}
-                                onConfirm={clearEncryptForm}
-                            />
-                        )}
-
-                        {/* ============ carrier image input ============== */}
-
-                        <label className="block mb-1">Carrier Image</label>
-
-                        {/* Hidden carrier file input */}
-
-                        <input
-                            ref={encCarrierInputRef}
-                            type="file"
-                            accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp"
-                            onChange={e => handleCarrierSelect(e.target.files[0] || null)}
-                            className="hidden"
-                        />
-
-                        {/* Carrier file selector UI */}
-
-                        <div className="flex items-start gap-2 w-full">
-
-                            {/* Carrier : Browse button */}
-
+                        {/* RIGHT: Clear button */}
+                        <div className="absolute right-0">
                             <button
                                 type="button"
-                                onClick={() => encCarrierInputRef.current?.click()}
-                                className="px-4 py-2.5 bg-gray-200 rounded-md hover:bg-gray-300 text-sm shrink-0"
+                                onClick={requestEncryptClear}
+                                disabled={encLoading || !isEncryptFormDirty}
+                                title="Ctrl + Shift + E"
+                                className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all ${
+                                    encLoading || !isEncryptFormDirty
+                                        ? "border-slate-800 bg-[#0d1627]/60 text-slate-600 cursor-not-allowed"
+                                        : "border-cyan-500/30 bg-[#132038] hover:bg-[#1a2d50] text-cyan-300 hover:text-white shadow-sm cursor-pointer"
+                                }`}
                             >
-                                Browse
+                                ♻️ Clear
                             </button>
-
-                            <div className="flex items-start border border-gray-300 rounded-md px-3 py-2.5 flex-1 min-w-0 bg-gray-50 hover:bg-gray-100 transition-colors">
-
-                                {!encCarrier ? (
-                                    <span className="text-sm text-gray-400">
-                                        Choose carrier image
-                                    </span>
-                                ) : (
-                                    <>
-                                        <span
-                                            className={`text-xs text-gray-700 cursor-pointer ${showEncCarrierFullName
-                                                ? "whitespace-normal break-all"
-                                                : "truncate flex-1"
-                                                }`}
-                                            title={encCarrier.name} // Carrier full file name on desktop by hover
-                                            onClick={() => setShowEncCarrierFullName(v => !v)} // Carrier full file name on mobile by click
-                                        >
-                                            {encCarrier.name}
-                                        </span>
-
-                                        {/* Carrier : Remove button */}
-
-                                        <button
-                                            type="button"
-                                            onClick={removeEncCarrier}
-                                            className="ml-auto pl-3 text-green-500 hover:text-red-600 shrink-0 items-start"
-                                            title="Remove carrier"
-                                        >
-                                            ✖
-                                        </button>
-                                    </>
-                                )}
-                            </div>
                         </div>
+                    </div>
 
-
-                        {/* Carrier validation error */}
-
-                        {encCarrierError && (
-                            <div className="text-sm text-red-600 mt-1">
-                                {encCarrierError}
-                            </div>
-                        )}
-
-                        {/* =========== CARRIER METADATA DISPLAY ============ */}
-
-                        {carrierInfo && (
-                            <div className="text-sm bg-linear-to-r from-cyan-50 to-white p-3 border border-cyan-200 rounded-md grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
-
-                                {/* Carrier info */}
-                                <p className="order-1 md:order-1">
-                                    <b>Carrier :</b>{" "}
-                                    {carrierInfo.carrier_ext.toUpperCase()} |{" "}
-                                    {formatSize(carrierInfo.file_size_bytes)}
-                                </p>
-
-                                {/* Used capacity */}
-                                {carrierInfo.used_bytes > 0 && (
-                                    <p className="order-3 md:order-2">
-                                        <b>Used Capacity :</b>{" "}
-                                        {formatSize(carrierInfo.used_bytes)}
-                                    </p>
-                                )}
-
-                                {/* Total capacity */}
-                                {carrierInfo.capacity_bytes && (
-                                    <p className="order-2 md:order-3">
-                                        <b>Capacity :</b>{" "}
-                                        {formatSize(carrierInfo.capacity_bytes)}
-                                    </p>
-                                )}
-
-                                {/* Remaining capacity */}
-                                {carrierInfo.used_bytes > 0 && (
-                                    <p className="order-4 md:order-4">
-                                        <b>Remaining Capacity :</b>{" "}
-                                        {formatSize(carrierInfo.remaining_capacity)}
-                                    </p>
-                                )}
-
-                                {/* APP-based note */}
-                                {!carrierInfo.capacity_bytes && (
-                                    <p className="order-2 md:order-2 text-xs text-gray-600 text-left sm:text-left md:col-span-2">
-                                        <b>Note :</b> JPG / JPEG images support large payloads using APP-based embedding.
-                                    </p>
-                                )}
-                            </div>
-                        )}
-
-                        {/* =========== Payload files selection ============= */}
-
-                        <label className="flex justify-between items-center mt-2 mb-1">Files to embed</label>
-
-                        {/* Hidden initial file input */}
-
-                        <input
-                            ref={encFilesInputRef}
-                            type="file"
-                            accept={valid_payload_extensions}
-                            multiple
-                            onChange={handleEncFilesChange}
-                            className="hidden"
+                    {/* CLEAR CONFIRMATION MODAL */}
+                    {showEncClearConfirm && (
+                        <ConfirmModal
+                            message="🧹 Clear encryption form ?"
+                            onCancel={() => setShowEncClearConfirm(false)}
+                            onConfirm={clearEncryptForm}
                         />
+                    )}
 
-                        {/* Hidden file input for added payload files */}
+                    {/* ============ CARRIER IMAGE INPUT ============== */}
+                    <label className="block mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                        Carrier Image
+                    </label>
 
-                        <input
-                            ref={encAddFilesInputRef}
-                            type="file"
-                            accept={valid_payload_extensions}
-                            multiple
-                            onChange={handleAddEncFiles}
-                            className="hidden"
-                        />
+                    <input
+                        ref={encCarrierInputRef}
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp"
+                        onChange={e => handleCarrierSelect(e.target.files[0] || null)}
+                        className="hidden"
+                    />
 
-
-                        {/* Payload files : Action buttons */}
-
-                        <div className="flex items-center gap-3 w-full">
-                            <button
-                                type="button"
-                                onClick={() => encFilesInputRef.current?.click()}
-                                className="px-4 py-2.5 bg-gray-200 rounded-md hover:bg-gray-300 text-sm shrink-0"
-                            >
-                                Choose Files
-                            </button>
-
-                            {/* Conditional : Add more button */}
-
-                            {encFiles.length > 0 && (
-                                <button
-                                    type="button"
-                                    onClick={() => encAddFilesInputRef.current?.click()}
-                                    className="px-3 py-2 border border-blue-400 text-blue-700 rounded-md text-sm hover:bg-blue-50 transition-colors shrink-0"
-                                    title="Add more files"
-                                >
-                                    + Add
-                                </button>
-                            )}
-
-                            <span className="text-sm text-gray-600 truncate">
-                                {encFiles.length > 0
-                                    ? `${encFiles.length} file${encFiles.length > 1 ? "s" : ""} selected`
-                                    : "Select files to embed"}
-                            </span>
-                        </div>
-
-
-
-                        {/* Payload files error */}
-
-                        {encFilesError && (
-                            <div className="text-sm text-red-600 mt-1">
-                                {encFilesError}
-                            </div>
-                        )}
-
-                        {/* Payload files List */}
-
-                        {encFiles.length > 0 && (
-                            <div className="text-sm bg-linear-to-b from-white to-slate-50 border border-slate-200 p-3 rounded-md space-y-2">
-                                <b>Payload Files : </b>
-                                <div className="mt-3 rounded-md p-2 bg-white">
-                                    <ul className="mt-3 space-y-2 max-h-60 overflow-y-auto">
-                                        {encFiles.map((file, index) => (
-                                            <li
-                                                key={`${file.name}_${file.size}`}
-                                                className="flex items-start gap-2 px-3 py-2 border border-slate-200 rounded-md bg-white hover:bg-slate-50 transition-colors"
-                                            >
-                                                {/* Payload File : index + filename */}
-                                                <div className="flex items-start gap-2 min-w-0 flex-1">
-                                                    <span className="text-gray-500 w-5 text-right">
-                                                        {index + 1}.
-                                                    </span>
-
-                                                    <span
-                                                        className={`cursor-pointer ${expandedFileIndex === index
-                                                            ? "whitespace-normal break-all"
-                                                            : "truncate flex-1"
-                                                            }`}
-                                                        title={file.name} // full file name on desktop by hovering
-                                                        onClick={() =>
-                                                            setExpandedFileIndex(
-                                                                expandedFileIndex === index ? null : index
-                                                            )
-                                                        }
-                                                    >
-                                                        {file.name} {/* Full file name on mobile on click */}
-                                                    </span>
-
-                                                </div>
-
-                                                {/* MIDDLE: size (fixed width ) */}
-                                                <span className="w-19 sm:w-24 text-left text-gray-600">
-                                                    {formatSizeWithUnit(file.size, payloadUnit)}
-                                                </span>
-
-                                                {/* Payload File : remove button */}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeEncFile(index)}
-                                                    className=" text-green-500 hover:text-red-600 shrink-0 leading-none text-sm transition-colors"
-                                                    title="Remove file"
-                                                >
-                                                    ✖
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* Total Payload size */}
-                                <p className="pt-1">
-                                    <b>Payload size :</b>{" "}
-                                    {formatSize(getTotalPayloadSize(encFiles))}
-                                </p>
-
-                                {/* Hint: payload selected but no carrier */}
-                                {encFiles.length > 0 && !encCarrier && (
-                                    <p className=" text-red-500 font-semibold text-left sm:text-left">
-                                        Select a carrier file to check encryption feasibility
-                                    </p>
-                                )}
-
-                                {/* Encryption status */}
-                                {encFiles.length > 0 && encCarrier && (
-                                    <p className="font-semibold text-left sm:text-left px-2 py-1 rounded-md inline-block">
-
-                                        {carrierInfo?.capacity_bytes ? (
-                                            getTotalPayloadSize(encFiles) <= carrierInfo.remaining_capacity ? (
-                                                <span className="text-green-700 bg-green-50 px-2 py-1 rounded-md">
-                                                    ✔ Encryption possible ( LSB-based embedding )
-                                                </span>
-                                            ) : (
-                                                <span className="text-red-600 bg-red-50 px-2 py-1 rounded-md">
-                                                    ✖ Payload exceeds carrier available capacity
-                                                </span>
-                                            )
-                                        ) : (
-                                            <span className="text-green-700 bg-green-50 px-2 py-1 rounded-md">
-                                                ✔ Encryption possible ( APP-based embedding )
-                                            </span>
-                                        )}
-                                    </p>
-                                )}
-                            </div>
-                        )}
-
-                        {/* ---------- Encryption Key input ----------*/}
-
-                        <label className="block mt-4 mb-1 text-sm font-medium">
-                            Encryption Key
-                        </label>
-
-                        <div className="relative">
-                            <input
-                                type={"password"}
-                                value={encPassphrase}
-                                onChange={e => setEncPassphrase(e.target.value)}
-                                placeholder="Enter encryption key"
-                                className="border border-gray-300 rounded-md px-3 py-2.5 w-full pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-
-                        <p className="mt-1 text-xs text-gray-500">
-                            Keep this key secure. It is required for decryption.
-                        </p>
-
-                        {/* =========== Encrypt Button ============= */}
-
+                    <div className="flex items-start gap-2 w-full">
                         <button
-                            type="submit"
-                            disabled={encLoading}
-                            className={`mt-3 px-4 py-2.5 w-full rounded-md text-sm text-white ${encLoading ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 "}`}
+                            type="button"
+                            onClick={() => encCarrierInputRef.current?.click()}
+                            className="px-4 py-2.5 bg-[#14233e] hover:bg-[#1b3055] text-cyan-300 hover:text-white border border-cyan-500/35 rounded-lg text-sm font-medium shrink-0 transition-colors cursor-pointer"
                         >
-                            {encLoading ? "Encrypting…" : "Encrypt"}
+                            Browse
                         </button>
 
-                        {encMessage && <div className="mt-3 p-2 bg-gray-50 text-sm rounded">{encMessage}</div>}
+                        <div className="flex items-start border border-cyan-500/25 rounded-lg px-3 py-2.5 flex-1 min-w-0 bg-[#0a1324]/80 hover:border-cyan-500/40 transition-colors">
+                            {!encCarrier ? (
+                                <span className="text-sm text-slate-500">
+                                    Choose carrier image
+                                </span>
+                            ) : (
+                                <>
+                                    <span
+                                        className={`text-xs text-slate-200 cursor-pointer ${showEncCarrierFullName
+                                            ? "whitespace-normal break-all"
+                                            : "truncate flex-1"
+                                            }`}
+                                        title={encCarrier.name}
+                                        onClick={() => setShowEncCarrierFullName(v => !v)}
+                                    >
+                                        {encCarrier.name}
+                                    </span>
 
-                    </form>
-                </div>
+                                    <button
+                                        type="button"
+                                        onClick={removeEncCarrier}
+                                        className="ml-auto pl-3 text-cyan-400 hover:text-red-400 shrink-0 text-sm transition-colors cursor-pointer"
+                                        title="Remove carrier"
+                                    >
+                                        ✖
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Carrier validation error */}
+                    {encCarrierError && (
+                        <div className="text-xs text-red-400 mt-1 bg-red-950/40 border border-red-500/30 p-2 rounded-lg">
+                            {encCarrierError}
+                        </div>
+                    )}
+
+                    {/* =========== CARRIER METADATA DISPLAY ============ */}
+                    {carrierInfo && (
+                        <div className="text-xs bg-[#0b1426]/90 p-3.5 border border-cyan-500/30 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 text-slate-300 shadow-inner">
+                            <p className="order-1 md:order-1">
+                                <b className="text-cyan-300">Carrier :</b>{" "}
+                                {carrierInfo.carrier_ext.toUpperCase()} |{" "}
+                                {formatSize(carrierInfo.file_size_bytes)}
+                            </p>
+
+                            {carrierInfo.used_bytes > 0 && (
+                                <p className="order-3 md:order-2">
+                                    <b className="text-cyan-300">Used Capacity :</b>{" "}
+                                    {formatSize(carrierInfo.used_bytes)}
+                                </p>
+                            )}
+
+                            {carrierInfo.capacity_bytes && (
+                                <p className="order-2 md:order-3">
+                                    <b className="text-cyan-300">Capacity :</b>{" "}
+                                    {formatSize(carrierInfo.capacity_bytes)}
+                                </p>
+                            )}
+
+                            {carrierInfo.used_bytes > 0 && (
+                                <p className="order-4 md:order-4">
+                                    <b className="text-cyan-300">Remaining Capacity :</b>{" "}
+                                    {formatSize(carrierInfo.remaining_capacity)}
+                                </p>
+                            )}
+
+                            {!carrierInfo.capacity_bytes && (
+                                <p className="order-2 md:order-2 text-xs text-slate-400 text-left sm:text-left md:col-span-2">
+                                    <b className="text-cyan-300">Note :</b> JPG / JPEG images support large payloads using APP-based embedding.
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* =========== PAYLOAD FILES SELECTION ============= */}
+                    <label className="flex justify-between items-center mt-2 mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                        Files to embed
+                    </label>
+
+                    <input
+                        ref={encFilesInputRef}
+                        type="file"
+                        accept={valid_payload_extensions}
+                        multiple
+                        onChange={handleEncFilesChange}
+                        className="hidden"
+                    />
+
+                    <input
+                        ref={encAddFilesInputRef}
+                        type="file"
+                        accept={valid_payload_extensions}
+                        multiple
+                        onChange={handleAddEncFiles}
+                        className="hidden"
+                    />
+
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 w-full">
+                        <button
+                            type="button"
+                            onClick={() => encFilesInputRef.current?.click()}
+                            className="px-4 py-2.5 bg-[#14233e] hover:bg-[#1b3055] text-cyan-300 hover:text-white border border-cyan-500/35 rounded-lg text-sm font-medium shrink-0 transition-colors cursor-pointer"
+                        >
+                            Choose Files
+                        </button>
+
+                        {encFiles.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => encAddFilesInputRef.current?.click()}
+                                className="px-3 py-2 border border-blue-500/50 text-blue-300 hover:text-white hover:bg-blue-900/30 rounded-lg text-sm transition-colors shrink-0 cursor-pointer"
+                                title="Add more files"
+                            >
+                                + Add
+                            </button>
+                        )}
+
+                        <span className="text-xs text-slate-400 truncate">
+                            {encFiles.length > 0
+                                ? `${encFiles.length} file${encFiles.length > 1 ? "s" : ""} selected`
+                                : "Select files to embed"}
+                        </span>
+                    </div>
+
+                    {/* Payload files error */}
+                    {encFilesError && (
+                        <div className="text-xs text-red-400 mt-1 bg-red-950/40 border border-red-500/30 p-2 rounded-lg">
+                            {encFilesError}
+                        </div>
+                    )}
+
+                    {/* Payload files List */}
+                    {encFiles.length > 0 && (
+                        <div className="text-xs bg-[#0b1426]/90 border border-cyan-500/25 p-3.5 rounded-xl space-y-2 text-slate-300 shadow-inner">
+                            <b className="text-cyan-300">Payload Files : </b>
+                            <div className="mt-2 rounded-lg p-2 bg-[#070e1c] border border-slate-800">
+                                <ul className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                                    {encFiles.map((file, index) => (
+                                        <li
+                                            key={`${file.name}_${file.size}`}
+                                            className="flex items-center gap-2 px-3 py-2 border border-slate-700/60 rounded-md bg-[#0a1324] hover:border-cyan-500/40 transition-colors"
+                                        >
+                                            <span className="text-slate-500 w-5 text-right font-mono">
+                                                {index + 1}.
+                                            </span>
+
+                                            <span
+                                                className={`cursor-pointer text-slate-200 ${expandedFileIndex === index
+                                                    ? "whitespace-normal break-all"
+                                                    : "truncate flex-1"
+                                                    }`}
+                                                title={file.name}
+                                                onClick={() =>
+                                                    setExpandedFileIndex(
+                                                        expandedFileIndex === index ? null : index
+                                                    )
+                                                }
+                                            >
+                                                {file.name}
+                                            </span>
+
+                                            <span className="w-19 sm:w-24 text-left text-slate-400 font-mono text-[11px]">
+                                                {formatSizeWithUnit(file.size, payloadUnit)}
+                                            </span>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeEncFile(index)}
+                                                className="text-cyan-400 hover:text-red-400 shrink-0 text-sm transition-colors cursor-pointer"
+                                                title="Remove file"
+                                            >
+                                                ✖
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <p className="pt-1">
+                                <b className="text-cyan-300">Payload size :</b>{" "}
+                                {formatSize(getTotalPayloadSize(encFiles))}
+                            </p>
+
+                            {encFiles.length > 0 && !encCarrier && (
+                                <p className="text-amber-400 text-xs font-semibold">
+                                    ⚠️ Select a carrier file to check encryption feasibility
+                                </p>
+                            )}
+
+                            {encFiles.length > 0 && encCarrier && (
+                                <p className="font-semibold text-left pt-1">
+                                    {carrierInfo?.capacity_bytes ? (
+                                        getTotalPayloadSize(encFiles) <= carrierInfo.remaining_capacity ? (
+                                            <span className="text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-1 rounded-md text-xs inline-block">
+                                                ✔ Encryption possible ( LSB-based embedding )
+                                            </span>
+                                        ) : (
+                                            <span className="text-red-400 bg-red-950/70 border border-red-500/40 px-2.5 py-1 rounded-md text-xs inline-block">
+                                                ✖ Payload exceeds carrier available capacity
+                                            </span>
+                                        )
+                                    ) : (
+                                        <span className="text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-1 rounded-md text-xs inline-block">
+                                            ✔ Encryption possible ( APP-based embedding )
+                                        </span>
+                                    )}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* ---------- Encryption Key input ----------*/}
+                    <label className="block mt-4 mb-1 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                        Encryption Key
+                    </label>
+
+                    <div className="relative">
+                        <input
+                            type={"password"}
+                            value={encPassphrase}
+                            onChange={e => setEncPassphrase(e.target.value)}
+                            placeholder="Enter encryption key"
+                            className="border border-cyan-500/30 rounded-lg px-3.5 py-2.5 w-full pr-10 text-sm bg-[#0a1324]/90 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 focus:border-cyan-400 transition-all font-mono"
+                        />
+                    </div>
+
+                    <p className="mt-1 text-xs text-slate-400">
+                        Keep this key secure. It is required for decryption.
+                    </p>
+
+                    {/* =========== Encrypt Button ============= */}
+                    <button
+                        type="submit"
+                        disabled={encLoading}
+                        className={`mt-4 px-4 py-3.5 w-full rounded-xl text-sm font-bold tracking-wide uppercase text-white bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 hover:from-teal-400 hover:to-cyan-400 shadow-[0_0_20px_rgba(0,217,245,0.35)] hover:shadow-[0_0_30px_rgba(0,217,245,0.6)] transition-all transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2`}
+                    >
+                        {encLoading ? (
+                            <>
+                                <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin inline-block" />
+                                <span>Encrypting…</span>
+                            </>
+                        ) : (
+                            <span>🔒 Encrypt</span>
+                        )}
+                    </button>
+
+                    {encMessage && (
+                        <div className={`mt-3 p-3 rounded-xl text-xs border flex items-center gap-2 shadow-inner ${
+                            encMessage.includes("failed") || encMessage.includes("error")
+                                ? "border-red-500/40 bg-red-950/40 text-red-200"
+                                : "border-cyan-500/30 bg-[#091122]/90 text-cyan-200"
+                        }`}>
+                            {encMessage}
+                        </div>
+                    )}
+                </form>
             </div>
         </div>
     );
 }
-
